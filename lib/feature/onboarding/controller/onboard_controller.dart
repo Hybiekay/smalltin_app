@@ -11,7 +11,7 @@ class OnboardingController extends GetxController {
   final box = GetStorage();
   Timer? timer;
   final PageController pageController = PageController();
-
+  
   @override
   void onInit() {
     animate();
@@ -27,6 +27,7 @@ class OnboardingController extends GetxController {
 
   void handlePress() {
     if (pageController.page == 3) {
+      pageController.dispose();
       box.write("onBoarded", true);
       Get.to(() => const SignInScreen());
     } else {

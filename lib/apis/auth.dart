@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'dart:developer';
 
@@ -128,8 +129,7 @@ class AuthService {
   }
 
   Future updateFields(
-    final int field,
-    final List subFields,
+    final List<int> field,
     final String token,
   ) async {
     try {
@@ -139,13 +139,41 @@ class AuthService {
         headers: {
           "accept": "application/json",
           "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
         },
-        body: {
-          "field_id": field.toString(),
-        },
+        body: jsonEncode({
+          "fields": field,
+        }),
       );
 
       log(res.statusCode.toString());
+      log(res.body.toString());
+      log("end");
+      return res;
+    } catch (e) {
+      log("$e");
+      return null;
+    }
+  }
+
+  Future updateSubFields(
+    final List<int> subfield,
+    final String token,
+  ) async {
+    try {
+      log("start");
+      var res = await http.post(ApiString.endPoint("update"),
+          headers: {
+            "accept": "application/json",
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "sub_fields": subfield,
+          }));
+
+      log(res.statusCode.toString());
+      log(res.body.toString());
       log("end");
       return res;
     } catch (e) {

@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
+import 'package:smalltin/feature/contact_us/screens/contact_us.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 import 'package:smalltin/widget/image_widget.dart';
+import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 
 class DrawerScreen extends StatelessWidget {
   const DrawerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuhtController>(builder: (authControler) {
+    return GetBuilder<AuthController>(builder: (authControler) {
       return Scaffold(
         backgroundColor: Theme.of(context).canvasColor,
         body: authControler.isBusy
@@ -34,12 +36,16 @@ class DrawerScreen extends StatelessWidget {
                       SideButton(
                         icon: AppImages.message,
                         title: "Edit Fields",
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(() => ChooseField());
+                        },
                       ),
                       SideButton(
                         icon: AppImages.call,
                         title: "Contact US",
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(() => ContactUs());
+                        },
                       ),
                       SideButton(
                         icon: AppImages.setting,

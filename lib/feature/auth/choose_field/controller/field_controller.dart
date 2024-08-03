@@ -19,6 +19,7 @@ class FieldsController extends GetxController {
     if (ff != null) {
       var fieldRessponse = FieldResponse.fromJson(ff);
       fields.addAll(fieldRessponse.fields);
+      update();
     } else {
       getAppFields();
     }
@@ -30,8 +31,8 @@ class FieldsController extends GetxController {
     fields.clear();
     var ff = box.read("fields");
     if (ff != null) {
-      var fieldRessponse = FieldResponse.fromJson(ff);
-      fields.addAll(fieldRessponse.fields);
+      //  var fieldRessponse = FieldResponse.fromJson(ff);
+      //  fields.addAll(fieldRessponse.fields);
       update();
     } else {
       await getAppFields();
@@ -42,12 +43,16 @@ class FieldsController extends GetxController {
     var res = await _fieldApi.getAllFields();
     if (res != null && res.statusCode == 200) {
       var data = json.decode(res.body);
+      // log(data.toString());
       var fieldRessponse = FieldResponse.fromJson(data);
+      log("From the Modle:" + fieldRessponse.fields.toString());
+
       fields.addAll(fieldRessponse.fields);
       update();
-      await box.write("fields", fields);
 
-      log(fieldRessponse.message);
+      await box.write("fields", fieldRessponse);
+
+      //  log(fieldRessponse.message);
     }
   }
 }

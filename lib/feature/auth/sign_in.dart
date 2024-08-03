@@ -7,13 +7,15 @@ import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 
+import '../../widget/auth_button.dart';
+
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuhtController>(
-        init: AuhtController(),
+    return GetBuilder<AuthController>(
+        init: AuthController(),
         builder: (controller) {
           return AppScaffold(
               child: controller.isBusy
@@ -65,22 +67,9 @@ class SignInScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.checkUSer(context);
-                                  },
-                                  child: Container(
-                                    width: 80.w,
-                                    height: 40.h,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .scaffoldBackgroundColor,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child:
-                                        Image.asset(AppImages.iconArrowForward),
-                                  ),
-                                ),
+                                AuthButton(onTap: () {
+                                  controller.checkUSer(context);
+                                }),
                               ],
                             )),
                         const SizedBox(

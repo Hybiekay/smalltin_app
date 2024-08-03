@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(FieldsController());
-    Get.put(AuhtController());
+    Get.put(AuthController());
     return GetBuilder<ThemesController>(builder: (controller) {
       return ScreenUtilInit(
           designSize: const Size(360, 690),
@@ -35,15 +35,15 @@ class MyApp extends StatelessWidget {
                 darkTheme: AppThemes.darkTheme,
                 debugShowCheckedModeBanner: false,
                 themeMode: Get.find<ThemesController>().themeData(),
-                home: GetBuilder<AuhtController>(
-                  builder: (auhtController) {
-                    if (auhtController.box.read("token") == null) {
-                      if (auhtController.box.read("onBoarded") != null) {
+                home: GetBuilder<AuthController>(
+                  builder: (AuthController) {
+                    if (AuthController.box.read("token") == null) {
+                      if (AuthController.box.read("onBoarded") != null) {
                         return const SignInScreen();
                       } else {
                         return const OnboardingScreen();
                       }
-                    } else if (auhtController.box.read("token") != null) {
+                    } else if (AuthController.box.read("token") != null) {
                       return const HomeScreen();
                     } else {
                       return const LoadingScreen();

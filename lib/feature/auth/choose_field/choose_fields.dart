@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/feature/auth/choose_field/controller/field_controller.dart';
+import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
+import 'package:smalltin/feature/widget/loading_widget.dart';
+import 'package:smalltin/themes/color.dart';
+import 'package:smalltin/widget/next_button.dart';
 import '../../../core/core.dart';
 import 'choose_sub_field.dart';
 
@@ -13,41 +20,75 @@ class ChooseField extends StatefulWidget {
 }
 
 class _ChooseFieldState extends State<ChooseField> {
+  List<int> selectedfields = [];
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      appbarTitle: const Text(
-        "Choose Your Feild",
-        style: TextStyle(
-          fontSize: 18,
+    return GetBuilder<AuthController>(builder: (authController) {
+      return AppScaffold(
+        appbarTitle: Text(
+          "Choose Your Field",
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(color: !context.isDarkMode ? AppColor.white : null),
         ),
-      ),
-      child: GetBuilder<FieldsController>(builder: (fieldsContronller) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            await fieldsContronller.refreshfields();
-          },
-          child: SingleChildScrollView(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 17.0, // Space between bubbles horizontally
-              runSpacing: 7.0, // Space between bubbles vertically
-              children: fieldsContronller.fields
-                  .map((bub) => GestureDetector(
-                      onTap: () {
-                        Get.to(() => ChooseSubField(mainField: bub.id));
-                      },
-                      child: bubble(bub.name, getColorFromHex(bub.color),
-                          bub.size.toDouble())))
-                  .toList(),
-            ),
-          ),
-        );
-      }),
-    );
+        appbarActions: [
+          NextButton(onTap: () {
+            if (selectedfields.isEmpty || selectedfields.length < 2) {
+              Get.snackbar("Field is Required", "Select At least 2",
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor);
+            } else {
+              authController.updateFields(
+                context: context,
+                field: selectedfields,
+              );
+            }
+          }),
+        ],
+        child: authController.isBusy
+            ? Loading()
+            : GetBuilder<FieldsController>(builder: (fieldsContronller) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await fieldsContronller.refreshfields();
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 17.0, // Space between bubbles horizontally
+                          runSpacing: 7.0, // Space between bubbles vertically
+                          children: fieldsContronller.fields
+                              .map((bub) => GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (selectedfields.contains(bub.id)) {
+                                        selectedfields.remove(bub.id);
+                                      } else {
+                                        selectedfields.add(bub.id);
+                                      }
+                                    });
+                                    //  Get.to(() => ChooseSubField(mainField: bub.id));
+                                  },
+                                  child: bubble(
+                                      bub.name,
+                                      getColorFromHex(bub.color),
+                                      bub.size.toDouble(),
+                                      selectedfields.contains(bub.id))))
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+      );
+    });
   }
 
-  Widget bubble(String text, Color color, double size) {
+  Widget bubble(String text, Color color, double size, bool isSelected) {
     return Container(
       width: size < 70
           ? 70
@@ -61,47 +102,34 @@ class _ChooseFieldState extends State<ChooseField> {
               : size,
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: color,
+        color: isSelected ? AppColor.gray : color,
         shape: BoxShape.circle,
       ),
-      child: Center(
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          softWrap: true,
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold),
-        ),
+      child: Stack(
+        children: [
+          Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              softWrap: true,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+          if (isSelected)
+            const Positioned(
+              right: 5,
+              bottom: 5,
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+        ],
       ),
     );
   }
 }
-
-List<Map> bubbles = [
-  {'text': 'Physics', 'color': Colors.yellow, 'size': 80.0},
-  {'text': 'Computer Science', 'color': Colors.pink, 'size': 100.0},
-  {'text': 'Biology', 'color': Colors.blue, 'size': 70.0},
-  {'text': 'Boxing', 'color': Colors.blue, 'size': 60.0},
-  {'text': 'Geography', 'color': Colors.yellow, 'size': 90.0},
-  {'text': 'Engineering', 'color': Colors.pink, 'size': 100.0},
-  {'text': 'Mathematics', 'color': Colors.yellow, 'size': 85.0},
-  {'text': 'Arts', 'color': Colors.blue, 'size': 75.0},
-  {'text': 'Tennis', 'color': Colors.green, 'size': 65.0},
-  {'text': 'Health', 'color': Colors.blue, 'size': 70.0},
-  {'text': 'Sports', 'color': Colors.yellow, 'size': 80.0},
-  {'text': 'Politics', 'color': Colors.yellow, 'size': 75.0},
-  {'text': 'Geography', 'color': Colors.pink, 'size': 90.0},
-  {'text': 'Environment', 'color': Colors.pink, 'size': 85.0},
-  {'text': 'Global Affairs', 'color': Colors.blue, 'size': 80.0},
-  {'text': 'Music', 'color': Colors.blue, 'size': 70.0},
-  {'text': 'Investments', 'color': Colors.yellow, 'size': 75.0},
-  {'text': 'Cinema', 'color': Colors.blue, 'size': 60.0},
-  {'text': 'Syntax', 'color': Colors.blue, 'size': 65.0},
-  {'text': 'Basketball', 'color': Colors.pink, 'size': 85.0},
-  {'text': 'Economy', 'color': Colors.blue, 'size': 70.0},
-  {'text': 'Entrepreneurship', 'color': Colors.yellow, 'size': 120.0},
-  {'text': 'Cricket', 'color': Colors.green, 'size': 75.0},
-  {'text': 'Film', 'color': Colors.pink, 'size': 55.0},
-];

@@ -7,6 +7,8 @@ import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 
+import '../../widget/auth_button.dart';
+
 class PasswordScreen extends StatefulWidget {
   const PasswordScreen({super.key});
 
@@ -18,8 +20,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: GetBuilder<AuhtController>(builder: (auhtController) {
-        return auhtController.isBusy
+      child: GetBuilder<AuthController>(builder: (AuthController) {
+        return AuthController.isBusy
             ? const Loading()
             : Column(
                 children: [
@@ -51,7 +53,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         children: [
                           Expanded(
                             child: TextField(
-                              controller: auhtController.passEditingController,
+                              controller: AuthController.passEditingController,
                               style: Theme.of(context).textTheme.bodySmall,
                               decoration: InputDecoration(
                                 hintText: "Enter your Password here",
@@ -65,20 +67,10 @@ class _PasswordScreenState extends State<PasswordScreen> {
                               ),
                             ),
                           ),
-                          GestureDetector(
+                          AuthButton(
                             onTap: () {
-                              auhtController.login(context);
+                              AuthController.login(context);
                             },
-                            child: Container(
-                              width: 80.w,
-                              height: 40.h,
-                              decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Image.asset(AppImages.iconArrowForward),
-                            ),
                           ),
                         ],
                       )),
@@ -89,7 +81,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                       onTap: () {
-                        auhtController.forgetPassword(context);
+                        AuthController.forgetPassword(context);
                       },
                       child: Text(
                         "Forget Password? ",

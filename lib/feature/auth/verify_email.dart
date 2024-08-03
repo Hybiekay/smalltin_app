@@ -7,6 +7,7 @@ import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
+import 'package:smalltin/widget/auth_button.dart';
 
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({super.key});
@@ -19,7 +20,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: GetBuilder<AuhtController>(builder: (controller) {
+      child: GetBuilder<AuthController>(builder: (controller) {
         return controller.isBusy
             ? const Loading()
             : Column(
@@ -72,20 +73,10 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               ),
                             ),
                           ),
-                          GestureDetector(
+                          AuthButton(
                             onTap: () {
                               controller.verifyEmail(context);
                             },
-                            child: Container(
-                              width: 80.w,
-                              height: 40.h,
-                              decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Image.asset(AppImages.iconArrowForward),
-                            ),
                           ),
                         ],
                       )),

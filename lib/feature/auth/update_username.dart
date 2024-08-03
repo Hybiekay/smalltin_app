@@ -5,6 +5,7 @@ import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
+import 'package:smalltin/widget/auth_button.dart';
 
 class UpdateName extends StatefulWidget {
   const UpdateName({super.key});
@@ -17,7 +18,7 @@ class _UpdateNameState extends State<UpdateName> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: GetBuilder<AuhtController>(builder: (auhtController) {
+      child: GetBuilder<AuthController>(builder: (AuthController) {
         return Column(
           children: [
             SizedBox(height: 50.h),
@@ -48,7 +49,7 @@ class _UpdateNameState extends State<UpdateName> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: auhtController.nameEditingController,
+                        controller: AuthController.nameEditingController,
                         style: Theme.of(context).textTheme.bodySmall,
                         decoration: InputDecoration(
                           hintText: "Enter your username here",
@@ -61,19 +62,10 @@ class _UpdateNameState extends State<UpdateName> {
                         ),
                       ),
                     ),
-                    GestureDetector(
+                    AuthButton(
                       onTap: () {
-                        auhtController.updateName(context);
+                        AuthController.updateName(context);
                       },
-                      child: Container(
-                        width: 80.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Image.asset(AppImages.iconArrowForward),
-                      ),
                     ),
                   ],
                 )),

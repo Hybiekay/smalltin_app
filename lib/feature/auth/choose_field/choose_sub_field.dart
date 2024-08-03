@@ -6,11 +6,13 @@ import 'package:smalltin/feature/auth/choose_field/controller/field_controller.d
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
+import 'package:smalltin/themes/color.dart';
+import 'package:smalltin/widget/next_button.dart';
 
 import '../../../core/constants/app_images.dart';
 
 class ChooseSubField extends StatefulWidget {
-  final int mainField;
+  final List<int> mainField;
   const ChooseSubField({super.key, required this.mainField});
 
   @override
@@ -18,85 +20,77 @@ class ChooseSubField extends StatefulWidget {
 }
 
 class _ChooseSubFieldState extends State<ChooseSubField> {
-  List selectedSubfields = [];
+  List<int> selectedSubfields = [];
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuhtController>(builder: (authController) {
+    return GetBuilder<AuthController>(builder: (authController) {
       return GetBuilder<FieldsController>(builder: (fieldsController) {
-        var field = fieldsController.fields
-            .where((element) => element.id == widget.mainField)
-            .first;
+        // Find all fields that match any of the IDs in mainField
+        var fields = fieldsController.fields
+            .where((element) => widget.mainField.contains(element.id))
+            .toList();
+
+        // Aggregate all subfields from the matching fields
+        var subFields =
+            fields.expand((field) => field.subFields ?? []).toList();
+
         return AppScaffold(
           appbarTitle: Text(
-            field.name,
-            style: const TextStyle(
-              fontSize: 18,
-            ),
+            'Choose Subfields',
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: !context.isDarkMode ? AppColor.white : null),
           ),
-          child: GetBuilder<FieldsController>(builder: (fieldsController) {
-            var field = fieldsController.fields
-                .where((element) => element.id == widget.mainField)
-                .first;
-            var subFields = field.subFields;
-
-            return authController.isBusy
-                ? const Loading()
-                : Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: SingleChildScrollView(
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 17.0, // Space between bubbles horizontally
-                            runSpacing: 7.0, // Space between bubbles vertically
-                            children: subFields!
-                                .map((bub) => GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          if (selectedSubfields
-                                              .contains(bub.name)) {
-                                            selectedSubfields.remove(bub.name);
-                                          } else {
-                                            selectedSubfields.add(bub.name);
-                                          }
-                                        });
-                                      },
-                                      child: bubble(
-                                        bub.name,
-                                        getColorFromHex(bub.color),
-                                        bub.size.toDouble(),
-                                        selectedSubfields.contains(bub.name),
-                                      ),
-                                    ))
-                                .toList(),
-                          ),
+          appbarActions: [
+            NextButton(onTap: () {
+              if (selectedSubfields.isEmpty || selectedSubfields.length < 2) {
+                Get.snackbar("Field is Required", "Select At least 2",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor);
+              } else {
+                authController.updateSubFields(
+                    context: context, subFields: selectedSubfields);
+              }
+            }),
+          ],
+          child: authController.isBusy
+              ? const Loading()
+              : Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: SingleChildScrollView(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 17.0, // Space between bubbles horizontally
+                          runSpacing: 7.0, // Space between bubbles vertically
+                          children: subFields
+                              .map((bub) => GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (selectedSubfields
+                                            .contains(bub.id)) {
+                                          selectedSubfields.remove(bub.id);
+                                        } else {
+                                          selectedSubfields.add(bub.id);
+                                        }
+                                      });
+                                    },
+                                    child: bubble(
+                                      bub.name,
+                                      getColorFromHex(bub.color),
+                                      bub.size.toDouble(),
+                                      selectedSubfields.contains(bub.id),
+                                    ),
+                                  ))
+                              .toList(),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            authController.updateFields(
-                                context: context,
-                                field: widget.mainField,
-                                subFields: selectedSubfields);
-                          },
-                          child: Container(
-                            width: 110.w,
-                            height: 40.h,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Image.asset(AppImages.iconArrowForward),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-          }),
+                    ),
+                  ],
+                ),
         );
       });
     });
@@ -116,7 +110,7 @@ class _ChooseSubFieldState extends State<ChooseSubField> {
               : size,
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: color,
+        color: isSelected ? AppColor.gray : color,
         shape: BoxShape.circle,
       ),
       child: Stack(

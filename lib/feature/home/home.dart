@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/controller/user_controller.dart';
+import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/home/widget/drawer.dart';
@@ -21,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AuhtController auhtController = Get.put(AuhtController());
+  final AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return const Stack(
@@ -47,8 +48,22 @@ class _FrontPageState extends State<FrontPage> {
   double yOffSet = 0;
 
   bool isDrawerOpen = false;
-  final AuhtController auhtController = Get.put(AuhtController());
+  final AuthController authController = Get.put(AuthController());
   final UserController userController = Get.put(UserController());
+
+  @override
+  void initState() {
+    userController.refreshUser();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant FrontPage oldWidget) {
+    print("object");
+    userController.refreshUser();
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -59,6 +74,8 @@ class _FrontPageState extends State<FrontPage> {
       child: GetBuilder<UserController>(builder: (ucontroller) {
         UserModel? user = ucontroller.userModel;
         return AppScaffold(
+          leadingWidth: 1,
+          appbarLeading: Container(),
           appbarTitle: Row(
             children: [
               GestureDetector(
@@ -100,12 +117,27 @@ class _FrontPageState extends State<FrontPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user?.username ?? "Username",
-                    style: Theme.of(context).textTheme.bodySmall,
+                    capitalizeFirstLetter(
+                      user?.username ?? "Welcome",
+                    ),
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: !context.isDarkMode ? AppColor.gray : null,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
-                  Text(
-                    user?.field.name ?? "field",
-                    style: Theme.of(context).textTheme.bodySmall,
+                  SizedBox(
+                    width: 150,
+                    child: Text(
+                      user?.fields.isNotEmpty == true
+                          ? user!.fields.map((e) => e.name).toList().join(", ")
+                          : "No fields available",
+                      maxLines: 2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: AppColor.gray, fontSize: 10),
+                    ),
                   ),
                 ],
               ),
@@ -185,7 +217,7 @@ class _FrontPageState extends State<FrontPage> {
                                   .textTheme
                                   .bodySmall!
                                   .copyWith(
-                                    color: AppColor.scaffoldBg,
+                                    color: AppColor.gray,
                                     fontSize: 10,
                                   ),
                             ),
@@ -219,15 +251,14 @@ class _FrontPageState extends State<FrontPage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
-                                            .copyWith(
-                                                color: AppColor.scaffoldBg),
+                                            .copyWith(color: AppColor.gray),
                                       ),
                                       TextSpan(
                                         text: " 10,000 +",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
-                                            .copyWith(color: AppColor.white),
+                                            .copyWith(color: AppColor.gray),
                                       )
                                     ]))
                                   ],
@@ -337,8 +368,8 @@ class ViewButton extends StatelessWidget {
           child: Text(
             text,
             style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                fontWeight: FontWeight.bold,
+                color: !context.isDarkMode ? AppColor.white : null),
           ),
         ),
       ),
@@ -369,10 +400,9 @@ class CardButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall!
-                .copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                fontWeight: FontWeight.bold,
+                color: !context.isDarkMode ? AppColor.white : null),
           ),
         ),
       ),
@@ -407,10 +437,9 @@ class BoxCard extends StatelessWidget {
             ? Center(
                 child: Text(
                   text,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: !context.isDarkMode ? AppColor.white : null),
                 ),
               )
             : Column(
@@ -419,17 +448,17 @@ class BoxCard extends StatelessWidget {
                 children: [
                   Text(
                     text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(fontSize: 10, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: !context.isDarkMode ? AppColor.white : null),
                   ),
                   Text(
                     subText ?? '',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: !context.isDarkMode ? AppColor.white : null),
                   ),
                 ],
               ),

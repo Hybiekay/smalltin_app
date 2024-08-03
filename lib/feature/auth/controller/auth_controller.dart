@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart';
 import 'package:smalltin/apis/auth.dart';
 import 'package:smalltin/core/constants/dialog.dart';
 import 'package:smalltin/feature/auth/password_screen.dart';
@@ -15,7 +16,7 @@ import '../choose_field/choose_fields.dart';
 import '../choose_field/choose_sub_field.dart';
 import '../update_password.dart';
 
-class AuhtController extends GetxController {
+class AuthController extends GetxController {
   final box = GetStorage();
   bool isBusy = false;
   TextEditingController emailEditingController = TextEditingController();
@@ -47,7 +48,10 @@ class AuhtController extends GetxController {
               title: data["message"],
               message:
                   "Your Email is not Verified by pressing Ok we will send one time password to your email",
-              onPressed: resendOtp);
+              onPressed: () {
+                Get.back();
+                resendOtp();
+              });
         } else if (res.statusCode == 203 &&
             data["message"] == "Username is not set.") {
           AppDailog.error(
@@ -294,14 +298,14 @@ class AuhtController extends GetxController {
     }
   }
 
-  updateFields(
-      {required BuildContext context,
-      required int field,
-      required List subFields}) async {
+  updateFields({
+    required BuildContext context,
+    required List<int> field,
+  }) async {
     var token = box.read("token");
     isBusy = true;
     update();
-    var res = await _authService.updateFields(field, subFields, token);
+    var res = await _authService.updateFields(field, token);
     isBusy = false;
     update();
     if (res != null) {
@@ -310,7 +314,32 @@ class AuhtController extends GetxController {
         AppDailog.error(
             title: data["message"],
             onPressed: () {
-              Get.off(() => const HomeScreen());
+              Get.off(() => ChooseSubField(
+                    mainField: field,
+                  ));
+            },
+            context: context,
+            buttonText: "Let's go",
+            message: "Your account is all Set.");
+      }
+    }
+  }
+
+  updateSubFields(
+      {required BuildContext context, required List<int> subFields}) async {
+    var token = box.read("token");
+    isBusy = true;
+    update();
+    var res = await _authService.updateSubFields(subFields, token);
+    isBusy = false;
+    update();
+    if (res != null) {
+      var data = jsonDecode(res.body);
+      if (res.statusCode == 200) {
+        AppDailog.error(
+            title: data["message"],
+            onPressed: () {
+              Get.offAll(() => const HomeScreen());
             },
             context: context,
             buttonText: "Let's go",

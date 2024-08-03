@@ -7,6 +7,8 @@ import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 
+import '../../widget/auth_button.dart';
+
 class CreatePassword extends StatefulWidget {
   const CreatePassword({super.key});
 
@@ -17,7 +19,7 @@ class CreatePassword extends StatefulWidget {
 class _CreatePasswordState extends State<CreatePassword> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuhtController>(builder: (auhtController) {
+    return GetBuilder<AuthController>(builder: (AuthController) {
       return AppScaffold(
         child: Column(
           children: [
@@ -49,7 +51,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: auhtController.passwordEditingController,
+                        controller: AuthController.passwordEditingController,
                         style: Theme.of(context).textTheme.bodySmall,
                         decoration: InputDecoration(
                           hintText: "Enter Your Password here",
@@ -62,19 +64,10 @@ class _CreatePasswordState extends State<CreatePassword> {
                         ),
                       ),
                     ),
-                    GestureDetector(
+                    AuthButton(
                       onTap: () {
-                        auhtController.updatePassword(context);
+                        AuthController.updatePassword(context);
                       },
-                      child: Container(
-                        width: 80.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Image.asset(AppImages.iconArrowForward),
-                      ),
                     ),
                   ],
                 )),
@@ -99,8 +92,8 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: GetBuilder<AuhtController>(builder: (auhtController) {
-        return auhtController.isBusy
+      child: GetBuilder<AuthController>(builder: (AuthController) {
+        return AuthController.isBusy
             ? const Loading()
             : Column(
                 children: [
@@ -133,7 +126,7 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
                         children: [
                           Expanded(
                             child: TextField(
-                              controller: auhtController
+                              controller: AuthController
                                   .confrimPasswordEditingController,
                               style: Theme.of(context).textTheme.bodySmall,
                               decoration: InputDecoration(
@@ -148,20 +141,10 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
                               ),
                             ),
                           ),
-                          GestureDetector(
+                          AuthButton(
                             onTap: () {
-                              auhtController.updateMainPassword(context);
+                              AuthController.updateMainPassword(context);
                             },
-                            child: Container(
-                              width: 80.w,
-                              height: 40.h,
-                              decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Image.asset(AppImages.iconArrowForward),
-                            ),
                           ),
                         ],
                       )),

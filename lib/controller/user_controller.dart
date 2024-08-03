@@ -8,7 +8,7 @@ import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/model/user_model.dart';
 
 class UserController extends GetxController {
-  final AuhtController _authService = AuhtController();
+  final AuthController _authService = AuthController();
   UserModel? userModel;
   final box = GetStorage();
   @override

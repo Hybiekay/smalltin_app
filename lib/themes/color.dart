@@ -4,7 +4,7 @@ class AppColor {
   static const Color pColor = Color(0xff2F2E41);
   static const Color scaffoldBg = Color(0xff285b35);
   static const Color white = Color(0xffFFFFFF);
-  static const Color gray = Color(0xffD9D9D9);
+  static const Color gray = Color.fromARGB(232, 217, 217, 217);
   static const Color error = Color(0xffD9D9D9);
 }
 

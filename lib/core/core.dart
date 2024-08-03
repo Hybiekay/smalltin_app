@@ -13,3 +13,8 @@ Color getColorFromHex(String hexColor) {
   }
   return Color(int.parse(hexColor, radix: 16));
 }
+
+String capitalizeFirstLetter(String text) {
+  if (text.isEmpty) return text;
+  return text[0].toUpperCase() + text.substring(1).toLowerCase();
+}
