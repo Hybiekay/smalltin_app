@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/controller/user_controller.dart';
@@ -5,6 +6,7 @@ import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/home/widget/drawer.dart';
+import 'package:smalltin/feature/ladder/controller/ladder_controller.dart';
 import 'package:smalltin/feature/ladder/screen/ladder.dart';
 import 'package:smalltin/feature/questions/screens/question.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -23,6 +25,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final AuthController authController = Get.put(AuthController());
+  final UserController userController = Get.put(UserController());
+
   @override
   Widget build(BuildContext context) {
     return const Stack(
@@ -35,9 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class FrontPage extends StatefulWidget {
-  const FrontPage({
-    super.key,
-  });
+  const FrontPage({super.key});
 
   @override
   State<FrontPage> createState() => _FrontPageState();
@@ -46,10 +48,10 @@ class FrontPage extends StatefulWidget {
 class _FrontPageState extends State<FrontPage> {
   double xOffSet = 0;
   double yOffSet = 0;
-
   bool isDrawerOpen = false;
   final AuthController authController = Get.put(AuthController());
   final UserController userController = Get.put(UserController());
+  final LadderController ladderController = Get.put(LadderController());
 
   @override
   void initState() {
@@ -59,7 +61,6 @@ class _FrontPageState extends State<FrontPage> {
 
   @override
   void didUpdateWidget(covariant FrontPage oldWidget) {
-    print("object");
     userController.refreshUser();
     super.didUpdateWidget(oldWidget);
   }
@@ -73,263 +74,292 @@ class _FrontPageState extends State<FrontPage> {
       duration: const Duration(milliseconds: 300),
       child: GetBuilder<UserController>(builder: (ucontroller) {
         UserModel? user = ucontroller.userModel;
-        return AppScaffold(
-          leadingWidth: 1,
-          appbarLeading: Container(),
-          appbarTitle: Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    if (isDrawerOpen) {
-                      setState(() {
-                        xOffSet = 0;
-                        yOffSet = 0;
-                        isDrawerOpen = false;
-                      });
-                    } else {
-                      setState(() {
-                        xOffSet = 290;
-                        yOffSet = 80;
-                        isDrawerOpen = true;
-                      });
-                    }
-                  },
-                  child: isDrawerOpen
-                      ? Container(
-                          decoration: const BoxDecoration(
-                            color: AppColor.pColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: AppColor.white,
+        return GetBuilder<LadderController>(builder: (ladderController) {
+          // Get the first user in the ladder list, if available
+          var firstUser = ladderController.users.isNotEmpty
+              ? ladderController.users[0]
+              : null;
+
+          return AppScaffold(
+            leadingWidth: 1,
+            appbarLeading: Container(),
+            appbarTitle: Row(
+              children: [
+                GestureDetector(
+                    onTap: () {
+                      if (isDrawerOpen) {
+                        setState(() {
+                          xOffSet = 0;
+                          yOffSet = 0;
+                          isDrawerOpen = false;
+                        });
+                      } else {
+                        setState(() {
+                          xOffSet = 290;
+                          yOffSet = 80;
+                          isDrawerOpen = true;
+                        });
+                      }
+                    },
+                    child: isDrawerOpen
+                        ? Container(
+                            decoration: const BoxDecoration(
+                              color: AppColor.pColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: AppColor.white,
+                                ),
                               ),
-                            ),
-                          ))
-                      : const CircleAvatar()),
-              const SizedBox(
-                width: 10,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    capitalizeFirstLetter(
-                      user?.username ?? "Welcome",
+                            ))
+                        : const CircleAvatar()),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      capitalizeFirstLetter(
+                        user?.username ?? "Welcome",
+                      ),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: !context.isDarkMode ? AppColor.gray : null,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: !context.isDarkMode ? AppColor.gray : null,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      user?.fields.isNotEmpty == true
-                          ? user!.fields.map((e) => e.name).toList().join(", ")
-                          : "No fields available",
-                      maxLines: 2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: AppColor.gray, fontSize: 10),
+                    SizedBox(
+                      width: 150,
+                      child: Text(
+                        user?.fields.isNotEmpty == true
+                            ? user!.fields
+                                .map((e) => e.name)
+                                .toList()
+                                .join(", ")
+                            : "No fields available",
+                        maxLines: 2,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(color: AppColor.gray, fontSize: 10),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
+            ),
+            appbarActions: [
+              const DarkModeSwitch(),
+              AppBarButton(
+                title: "Total Job\$",
+                subTitle: "${user?.jobs} \$",
+              )
             ],
-          ),
-          appbarActions: [
-            const DarkModeSwitch(),
-            AppBarButton(
-              title: "Total Job\$",
-              subTitle: "${user?.jobs} \$",
-            )
-          ],
-          child: RefreshIndicator(
-            onRefresh: () async {
-              await ucontroller.refreshUser();
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  Text("Total Question Attempt: ${user?.totalQuestionAttempt}"),
-                  Text(
-                    "Total Question Correct: ${user?.totalQuestionCorrect}",
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      BoxCard(
-                        text: "Attempt",
-                        onTap: () {
-                          Get.to(() => const Question());
-                        },
-                        isButton: true,
-                      ),
-                      BoxCard(
-                        text: "Total  Q Attempt",
-                        subText: "${user?.totalQuestionAttempt}",
-                      ),
-                      BoxCard(
-                        text: "Total  Correct",
-                        subText: "${user?.totalQuestionCorrect}",
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 180,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: AppColor.pColor,
-                      borderRadius: BorderRadius.circular(10),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await ucontroller.refreshUser();
+                await ladderController.realtimeUpdate();
+              },
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Text(
+                        "Total Question Attempt: ${user?.totalQuestionAttempt}"),
+                    Text(
+                      "Total Question Correct: ${user?.totalQuestionCorrect}",
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const CardButton(
-                              text: "First Position",
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "You Are Not the The first \n Position  again Try to Answer \nmore question to beat it",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(
-                                    color: AppColor.gray,
-                                    fontSize: 10,
-                                  ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const CircleAvatar(),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Victor Patrick",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                            color: AppColor.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
-                                        text: "Job\$ ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColor.gray),
-                                      ),
-                                      TextSpan(
-                                        text: " 10,000 +",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: AppColor.gray),
-                                      )
-                                    ]))
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
+                        BoxCard(
+                          text: "Attempt",
+                          onTap: () {
+                            Get.to(() => const Question());
+                          },
+                          isButton: true,
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CardButton(
-                              text: "Edit Fields",
-                              onTap: () {
-                                Get.to(() => ChooseField());
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            ViewButton(
-                              text: "View All",
-                              isTop: true,
-                              onTap: () {
-                                Get.to(() => const Ladder());
-                              },
-                            ),
-                            const SizedBox(height: 13),
-                            ViewButton(
-                              text: "View In Position",
-                              onTap: () {
-                                Get.to(() => const Ladder());
-                              },
-                            ),
-                          ],
-                        )
+                        BoxCard(
+                          text: "Total  Q Attempt",
+                          subText: "${user?.totalQuestionAttempt}",
+                        ),
+                        BoxCard(
+                          text: "Total  Correct",
+                          subText: "${user?.totalQuestionCorrect}",
+                        ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Realtime result",
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 180,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: AppColor.pColor,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      Text(
-                        "View All",
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const CardButton(
+                                text: "First Position",
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                user?.id == firstUser?.userDetails.id
+                                    ? "You Are taking the first Position \nKeep it Going"
+                                    : "You Are Not the First \nPosition. Try to Answer \nmore questions to beat it",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                      color: AppColor.gray,
+                                      fontSize: 10,
+                                    ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  const CircleAvatar(),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        capitalizeFirstLetter(
+                                            firstUser?.userDetails.username ??
+                                                "No user"),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: AppColor.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      RichText(
+                                          text: TextSpan(children: [
+                                        TextSpan(
+                                          text: "Job\$ ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(color: AppColor.gray),
+                                        ),
+                                        TextSpan(
+                                          text: firstUser != null
+                                              ? " ${firstUser.correctAnswers * 50} +"
+                                              : "0",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(color: AppColor.gray),
+                                        )
+                                      ]))
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CardButton(
+                                text: "Edit Fields",
+                                onTap: () {
+                                  Get.to(() => const ChooseField());
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              ViewButton(
+                                text: "View All",
+                                isTop: true,
+                                onTap: () {
+                                  Get.to(() => const Ladder());
+                                },
+                              ),
+                              const SizedBox(height: 13),
+                              ViewButton(
+                                text: "View In Position",
+                                onTap: () {
+                                  Get.to(() => const Ladder());
+                                },
+                              ),
+                            ],
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.7,
-                    child: ListView.builder(
-                        itemCount: 1,
-                        itemBuilder: (context, index) {
-                          return const UserCard();
-                        }),
-                  )
-                ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Realtime result",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => const Ladder());
+                          },
+                          child: Text(
+                            "View All",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.7,
+                      child: ListView.builder(
+                          itemCount: ladderController.users.length,
+                          itemBuilder: (context, index) {
+                            var ladderUser = ladderController.users[index];
+                            return UserCard(user: ladderUser);
+                          }),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        );
+          );
+        });
       }),
     );
   }

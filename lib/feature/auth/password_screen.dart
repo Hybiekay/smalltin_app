@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -20,8 +19,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: GetBuilder<AuthController>(builder: (AuthController) {
-        return AuthController.isBusy
+      child: GetBuilder<AuthController>(builder: (authController) {
+        return authController.isBusy
             ? const Loading()
             : Column(
                 children: [
@@ -53,7 +52,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         children: [
                           Expanded(
                             child: TextField(
-                              controller: AuthController.passEditingController,
+                              controller: authController.passEditingController,
                               style: Theme.of(context).textTheme.bodySmall,
                               decoration: InputDecoration(
                                 hintText: "Enter your Password here",
@@ -69,7 +68,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           ),
                           AuthButton(
                             onTap: () {
-                              AuthController.login(context);
+                              authController.login(context);
                             },
                           ),
                         ],
@@ -81,7 +80,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                       onTap: () {
-                        AuthController.forgetPassword(context);
+                        authController.forgetPassword(context);
                       },
                       child: Text(
                         "Forget Password? ",

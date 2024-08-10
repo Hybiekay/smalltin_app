@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart';
 import 'package:smalltin/apis/auth.dart';
 import 'package:smalltin/core/constants/dialog.dart';
 import 'package:smalltin/feature/auth/password_screen.dart';
@@ -231,6 +230,7 @@ class AuthController extends GetxController {
                   message: "You haven't selected any subfields yet.");
             }
           } else {
+            
             AppDailog.error(
                 onPressed: () {
                   Get.back();
@@ -377,7 +377,6 @@ class AuthController extends GetxController {
     isBusy = true;
     update();
     var res = await _authService.getuser(token);
-
     isBusy = false;
     update();
     return res;
@@ -391,6 +390,7 @@ class AuthController extends GetxController {
     box.remove("token");
     isBusy = false;
     update();
+
     Get.offAll(() => const SignInScreen());
   }
 }

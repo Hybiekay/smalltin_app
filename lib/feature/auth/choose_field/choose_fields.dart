@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/feature/auth/choose_field/controller/field_controller.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -10,7 +7,7 @@ import 'package:smalltin/feature/widget/loading_widget.dart';
 import 'package:smalltin/themes/color.dart';
 import 'package:smalltin/widget/next_button.dart';
 import '../../../core/core.dart';
-import 'choose_sub_field.dart';
+
 
 class ChooseField extends StatefulWidget {
   const ChooseField({super.key});
@@ -47,7 +44,7 @@ class _ChooseFieldState extends State<ChooseField> {
           }),
         ],
         child: authController.isBusy
-            ? Loading()
+            ? const Loading()
             : GetBuilder<FieldsController>(builder: (fieldsContronller) {
                 return RefreshIndicator(
                   onRefresh: () async {

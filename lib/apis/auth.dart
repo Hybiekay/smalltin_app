@@ -103,6 +103,7 @@ class AuthService {
         },
       );
       debugPrint(res.statusCode.toString());
+      debugPrint(res.body.toString());
       return res;
     } catch (e) {
       return null;
@@ -146,9 +147,9 @@ class AuthService {
         }),
       );
 
-      log(res.statusCode.toString());
-      log(res.body.toString());
-      log("end");
+      // log(res.statusCode.toString());
+      // log(res.body.toString());
+      // log("end");
       return res;
     } catch (e) {
       log("$e");
@@ -172,9 +173,9 @@ class AuthService {
             "sub_fields": subfield,
           }));
 
-      log(res.statusCode.toString());
-      log(res.body.toString());
-      log("end");
+      // log(res.statusCode.toString());
+      // log(res.body.toString());
+      // log("end");
       return res;
     } catch (e) {
       log("$e");
@@ -185,16 +186,20 @@ class AuthService {
   Future<http.Response?> getuser(
     final String token,
   ) async {
-    var res = await http.get(
-      ApiString.endPoint("user"),
-      headers: {
-        "accept": "application/json",
-        "Authorization": "Bearer $token",
-      },
-    );
-    debugPrint(res.statusCode.toString());
-    debugPrint(res.body.toString());
-    return res;
+    try {
+      var res = await http.get(
+        ApiString.endPoint("user"),
+        headers: {
+          "accept": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      return res;
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
   }
 
   Future logout(

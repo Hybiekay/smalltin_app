@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/choose_field/controller/field_controller.dart';
@@ -9,7 +8,6 @@ import 'package:smalltin/feature/widget/loading_widget.dart';
 import 'package:smalltin/themes/color.dart';
 import 'package:smalltin/widget/next_button.dart';
 
-import '../../../core/constants/app_images.dart';
 
 class ChooseSubField extends StatefulWidget {
   final List<int> mainField;

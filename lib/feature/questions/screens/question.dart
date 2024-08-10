@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:smalltin/feature/questions/controllers/quiz_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
+import 'package:smalltin/feature/widget/loading_widget.dart';
 import 'package:smalltin/themes/color.dart';
 import 'package:smalltin/widget/appbar_button.dart';
 
@@ -11,64 +15,85 @@ class Question extends StatefulWidget {
 }
 
 class _QuestionState extends State<Question> {
+  final QuizController controller = Get.put(QuizController());
   bool? answer;
+
+  @override
+  void initState() {
+    controller.startQuiz();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      centerTitle: false,
-      leadingWidth: 0.0,
-      appbarLeading: const Center(),
-      appbarTitle: Row(
-        children: [
-          const AppBarButton(
+    return GetBuilder<QuizController>(builder: (quizController) {
+      return AppScaffold(
+        centerTitle: false,
+        leadingWidth: 0.0,
+        appbarLeading: const Center(),
+        appbarTitle: Row(
+          children: [
+            AppBarButton(
+              title: "Timer",
+              subTitle: "${quizController.time}",
+            ),
+            Text(
+              "Question ${quizController.questionCount} of 10",
+              style:
+                  Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 15),
+            )
+          ],
+        ),
+        appbarActions: const [
+          AppBarButton(
             title: "Total Job\$",
             subTitle: "500\$",
-          ),
-          Text(
-            "Question 7 of 10",
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall!
-                .copyWith(fontWeight: FontWeight.bold),
           )
         ],
-      ),
-      appbarActions: const [
-        AppBarButton(
-          title: "Total Job\$",
-          subTitle: "500\$",
-        )
-      ],
-      child: Column(
-        children: [
-          const SizedBox(height: 25),
-          Container(
-            height: 320,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: AppColor.gray.withOpacity(0.3),
-            ),
-            child: const Center(
-              child: Text(""),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              itemCount: option.length,
-              itemBuilder: (context, index) {
-                Map opt = option[index];
-
-                return OptionCard(
-                  opt: opt,
-                );
-              },
-            ),
-          )
-        ],
-      ),
-    );
+        child: quizController.isBusy
+            ? const Loading()
+            : Column(
+                children: [
+                  const SizedBox(height: 25),
+                  Container(
+                    height: 320,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColor.gray.withOpacity(0.3),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "${quizController.questionModel?.question}",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: quizController.option.length,
+                    itemBuilder: (context, index) {
+                      Map opt = quizController.option[index];
+                      return OptionCard(
+                        opt: opt,
+                        onTap: () {
+                          quizController.answerQuestion(
+                            answer: opt.keys.first.toString().toLowerCase(),
+                          );
+                        },
+                      );
+                    },
+                  ))
+                ],
+              ),
+      );
+    });
   }
 }
 
@@ -76,58 +101,48 @@ class OptionCard extends StatefulWidget {
   const OptionCard({
     super.key,
     required this.opt,
+    this.onTap,
   });
 
   final Map opt;
+  final VoidCallback? onTap;
 
   @override
   State<OptionCard> createState() => _OptionCardState();
 }
 
 class _OptionCardState extends State<OptionCard> {
-  bool? answer;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (widget.opt.keys.first == "A") {
-          setState(() {
-            answer = true;
-          });
-        } else {
-          setState(() {
-            answer = false;
-          });
-        }
-      },
+      onTap: widget.onTap,
       child: Container(
         height: 64,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: answer == true
-                ? AppColor.scaffoldBg.withOpacity(0.3)
-                : answer == false
-                    ? AppColor.pColor
-                    : null),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Row(
           children: [
             Text(
-              "${widget.opt.keys.first} ",
-              style: Theme.of(context).textTheme.bodyLarge,
+              "${widget.opt.keys.first} )  ",
+              style:
+                  Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 15),
             ),
-            Text(
-              "${widget.opt.values.first}",
-              style: Theme.of(context).textTheme.bodyLarge,
+            SizedBox(
+              width: 255.w,
+              child: Text(
+                "${widget.opt.values.first}",
+                maxLines: 2,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontSize: 15),
+              ),
             ),
             const Expanded(child: SizedBox()),
-            answer == null
-                ? Container()
-                : answer == true
-                    ? const Icon(Icons.check)
-                    : const Icon(Icons.dangerous)
           ],
         ),
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -19,7 +18,7 @@ class CreatePassword extends StatefulWidget {
 class _CreatePasswordState extends State<CreatePassword> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuthController>(builder: (AuthController) {
+    return GetBuilder<AuthController>(builder: (authController) {
       return AppScaffold(
         child: Column(
           children: [
@@ -51,7 +50,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: AuthController.passwordEditingController,
+                        controller: authController.passwordEditingController,
                         style: Theme.of(context).textTheme.bodySmall,
                         decoration: InputDecoration(
                           hintText: "Enter Your Password here",
@@ -66,7 +65,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                     ),
                     AuthButton(
                       onTap: () {
-                        AuthController.updatePassword(context);
+                        authController.updatePassword(context);
                       },
                     ),
                   ],
@@ -92,8 +91,8 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: GetBuilder<AuthController>(builder: (AuthController) {
-        return AuthController.isBusy
+      child: GetBuilder<AuthController>(builder: (authController) {
+        return authController.isBusy
             ? const Loading()
             : Column(
                 children: [
@@ -126,7 +125,7 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
                         children: [
                           Expanded(
                             child: TextField(
-                              controller: AuthController
+                              controller: authController
                                   .confrimPasswordEditingController,
                               style: Theme.of(context).textTheme.bodySmall,
                               decoration: InputDecoration(
@@ -143,7 +142,7 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
                           ),
                           AuthButton(
                             onTap: () {
-                              AuthController.updateMainPassword(context);
+                              authController.updateMainPassword(context);
                             },
                           ),
                         ],

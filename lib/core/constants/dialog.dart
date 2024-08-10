@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:smalltin/themes/color.dart';
 
 class AppDailog {
@@ -22,6 +21,15 @@ class AppDailog {
             ));
   }
 
+  static endQuiz({
+    required BuildContext context,
+    String? title,
+    required String message,
+  }) {
+   
+    
+  }
+
   static error({
     required BuildContext context,
     String? title,
@@ -41,6 +49,7 @@ class AppDailog {
   }
 }
 
+// ignore: must_be_immutable
 class ErorrWidget extends StatefulWidget {
   String? title;
   String? buttonText;

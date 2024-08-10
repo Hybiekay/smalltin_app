@@ -17,7 +17,7 @@ class AuthButton extends StatelessWidget {
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Icon(
+        child: const Icon(
           Icons.keyboard_double_arrow_right_outlined,
           size: 30,
         ),

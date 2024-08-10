@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -18,7 +17,7 @@ class _UpdateNameState extends State<UpdateName> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: GetBuilder<AuthController>(builder: (AuthController) {
+      child: GetBuilder<AuthController>(builder: (authController) {
         return Column(
           children: [
             SizedBox(height: 50.h),
@@ -49,7 +48,7 @@ class _UpdateNameState extends State<UpdateName> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: AuthController.nameEditingController,
+                        controller: authController.nameEditingController,
                         style: Theme.of(context).textTheme.bodySmall,
                         decoration: InputDecoration(
                           hintText: "Enter your username here",
@@ -64,7 +63,7 @@ class _UpdateNameState extends State<UpdateName> {
                     ),
                     AuthButton(
                       onTap: () {
-                        AuthController.updateName(context);
+                        authController.updateName(context);
                       },
                     ),
                   ],

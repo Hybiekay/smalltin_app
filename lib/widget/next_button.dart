@@ -19,7 +19,7 @@ class NextButton extends StatelessWidget {
       child: Container(
         width: 60.w,
         height: 30.h,
-        margin: EdgeInsets.only(right: 10),
+        margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           color: AppColor.white,
           borderRadius: BorderRadius.circular(20),

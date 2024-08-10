@@ -28,6 +28,7 @@ class FieldsController extends GetxController {
   }
 
   refreshfields() async {
+    log("hello");
     fields.clear();
     var ff = box.read("fields");
     if (ff != null) {
@@ -45,7 +46,7 @@ class FieldsController extends GetxController {
       var data = json.decode(res.body);
       // log(data.toString());
       var fieldRessponse = FieldResponse.fromJson(data);
-      log("From the Modle:" + fieldRessponse.fields.toString());
+      log("From the Modle:${fieldRessponse.fields}");
 
       fields.addAll(fieldRessponse.fields);
       update();

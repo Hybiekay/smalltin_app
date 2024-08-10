@@ -36,14 +36,14 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 themeMode: Get.find<ThemesController>().themeData(),
                 home: GetBuilder<AuthController>(
-                  builder: (AuthController) {
-                    if (AuthController.box.read("token") == null) {
-                      if (AuthController.box.read("onBoarded") != null) {
+                  builder: (authController) {
+                    if (authController.box.read("token") == null) {
+                      if (authController.box.read("onBoarded") != null) {
                         return const SignInScreen();
                       } else {
                         return const OnboardingScreen();
                       }
-                    } else if (AuthController.box.read("token") != null) {
+                    } else if (authController.box.read("token") != null) {
                       return const HomeScreen();
                     } else {
                       return const LoadingScreen();

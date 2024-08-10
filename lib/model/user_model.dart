@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 // Main UserModel model
 class UserModel {

@@ -37,14 +37,14 @@ class DrawerScreen extends StatelessWidget {
                         icon: AppImages.message,
                         title: "Edit Fields",
                         onPressed: () {
-                          Get.to(() => ChooseField());
+                          Get.to(() => const ChooseField());
                         },
                       ),
                       SideButton(
                         icon: AppImages.call,
                         title: "Contact US",
                         onPressed: () {
-                          Get.to(() => ContactUs());
+                          Get.to(() => const ContactUs());
                         },
                       ),
                       SideButton(
