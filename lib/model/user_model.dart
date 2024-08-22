@@ -1,4 +1,3 @@
-
 // Main UserModel model
 class UserModel {
   final int id;
@@ -8,7 +7,8 @@ class UserModel {
   final String? userBio;
   final int totalQuestionAttempt;
   final int totalQuestionCorrect;
-  final int jobs;
+  final int? jobs;
+  final String? profile;
   final DateTime emailVerifiedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -21,6 +21,7 @@ class UserModel {
     required this.email,
     required this.isVerified,
     this.userBio,
+    required this.profile,
     required this.totalQuestionAttempt,
     required this.totalQuestionCorrect,
     required this.jobs,
@@ -37,6 +38,7 @@ class UserModel {
       username: json['username'],
       email: json['email'],
       isVerified: json['is_verified'] == 1,
+      profile: json['profile'],
       userBio: json['user_bio'],
       totalQuestionAttempt: json['total_question_attempt'],
       totalQuestionCorrect: json['total_question_correct'],
@@ -62,6 +64,7 @@ class UserModel {
       'email': email,
       'is_verified': isVerified ? 1 : 0,
       'user_bio': userBio,
+      "profile":profile,
       'total_question_attempt': totalQuestionAttempt,
       'total_question_correct': totalQuestionCorrect,
       'jobs': jobs,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
+import 'package:smalltin/feature/auth/update_password.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 
@@ -16,6 +17,7 @@ class PasswordScreen extends StatefulWidget {
 }
 
 class _PasswordScreenState extends State<PasswordScreen> {
+  bool isObcure = true;
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -48,30 +50,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         ),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: authController.passEditingController,
-                              style: Theme.of(context).textTheme.bodySmall,
-                              decoration: InputDecoration(
-                                hintText: "Enter your Password here",
-                                hintStyle:
-                                    Theme.of(context).textTheme.bodySmall,
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10.w),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          AuthButton(
-                            onTap: () {
-                              authController.login(context);
-                            },
-                          ),
-                        ],
+                      child: PasswordTextField(
+                        controller: authController.passEditingController,
+                        onTap: () {
+                          authController.login(context);
+                        },
                       )),
                   const SizedBox(
                     height: 15,

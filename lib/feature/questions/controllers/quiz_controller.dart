@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smalltin/apis/quiz.dart';
-import 'package:smalltin/feature/home/home.dart';
-import 'package:smalltin/themes/color.dart';
-
+import 'package:smalltin/widget/end_game.dart';
+import 'package:smalltin/widget/time_up.dart';
 import '../model/question_model.dart';
 
 class QuizController extends GetxController {
@@ -17,7 +14,7 @@ class QuizController extends GetxController {
   QuestionModel? questionModel;
   bool isBusy = false;
   int questionCount = 1;
-  int time = 60;
+  int time = 50;
 
   List<Map> option = [
     {"A": "Hemoglobin"},
@@ -39,7 +36,7 @@ class QuizController extends GetxController {
 
   startQuiz() async {
     timer?.cancel();
-    time = 60;
+    time = 50;
     questionCount = 1;
     option = [];
     isBusy = true;
@@ -66,7 +63,7 @@ class QuizController extends GetxController {
   answerQuestion({
     required String answer,
   }) async {
-    if (time == 60) {
+    if (time == 50) {
       startCounting();
     }
     isBusy = true;
@@ -95,132 +92,12 @@ class QuizController extends GetxController {
       update();
     } else if (res.statusCode == 201) {
       var data = json.decode(res.body);
-      // showDialog(
-      //     context: context,
-      //     builder: (_) => Dialog(
-      //             child: Container(
-      //           child: Column(
-      //             children: [
-      //               Text(
-      //                 data["message"],
-      //               ),
-      //               Text("${data["correct_count"]} / 10"),
-      //               Text("You Earn ${data["correct_count"] * 50} "),
-      //             ],
-      //           ),
-      //         )));
-
       Get.dialog(EndGame(data: data));
+    } else if (res.statusCode == 401) {
+      timer?.cancel();
+      time = 0;
+      var data = json.decode(res.body);
+      Get.dialog(TimeUP(data: data));
     }
-  }
-}
-
-class EndGame extends StatefulWidget {
-  const EndGame({
-    super.key,
-    required this.data,
-  });
-
-  final Map data;
-
-  @override
-  State<EndGame> createState() => _EndGameState();
-}
-
-class _EndGameState extends State<EndGame> {
-  QuizController quizController = Get.put(QuizController());
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 40),
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        height: 300,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: AppColor.scaffoldBg,
-            borderRadius: BorderRadius.circular(20)),
-        child: Column(
-          children: [
-            Text(
-              widget.data["message"],
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: AppColor.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              "${widget.data["correct_count"]} / 10",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: AppColor.white, fontSize: 22),
-            ),
-            Text(
-              "You Earn ${widget.data["correct_count"] * 50} ",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: AppColor.white, fontSize: 18),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            QuizButton(
-              text: "Re-Attempt",
-              onTap: () {
-                Get.back();
-                quizController.startQuiz();
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            QuizButton(
-              text: "End Quiz",
-              onTap: () {
-                Get.offAll(() => const HomeScreen());
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class QuizButton extends StatelessWidget {
-  final VoidCallback onTap;
-  final String text;
-  const QuizButton({super.key, required this.onTap, this.text = 'Reatterm'});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: AppColor.gray,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        height: 35.h,
-        width: double.infinity,
-        child: Center(
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: AppColor.scaffoldBg,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ),
-      ),
-    );
   }
 }

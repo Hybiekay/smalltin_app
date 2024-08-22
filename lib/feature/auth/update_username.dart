@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/core/core.dart';
+import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/widget/auth_button.dart';
@@ -14,6 +15,8 @@ class UpdateName extends StatefulWidget {
 }
 
 class _UpdateNameState extends State<UpdateName> {
+  String values = '';
+  bool correct = false;
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -48,6 +51,27 @@ class _UpdateNameState extends State<UpdateName> {
                   children: [
                     Expanded(
                       child: TextField(
+                        onChanged: (v) async {
+                          var value = await authController.updateName(context);
+                          print(value.runtimeType);
+                          if (v.length < 3) {
+                            print(v.length);
+                            setState(() {
+                              correct = false;
+                              values = "Name Is less Then the required lenght";
+                            });
+                          } else if (value == 'Your username is available.') {
+                            setState(() {
+                              correct = true;
+                              values = "Your username is available.";
+                            });
+                          } else {
+                            setState(() {
+                              correct = false;
+                              values = value;
+                            });
+                          }
+                        },
                         controller: authController.nameEditingController,
                         style: Theme.of(context).textTheme.bodySmall,
                         decoration: InputDecoration(
@@ -63,7 +87,13 @@ class _UpdateNameState extends State<UpdateName> {
                     ),
                     AuthButton(
                       onTap: () {
-                        authController.updateName(context);
+                        if (correct) {
+                          Get.to(() => ChooseField());
+                        } else {
+                          Get.snackbar("Change Your username",
+                              "Try to use a unique username, because the on you choose has already been use",
+                              snackPosition: SnackPosition.BOTTOM);
+                        }
                       },
                     ),
                   ],
@@ -71,6 +101,32 @@ class _UpdateNameState extends State<UpdateName> {
             const SizedBox(
               height: 15,
             ),
+            authController.isBusy
+                ? Align(
+                    alignment: Alignment.bottomLeft,
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        correct
+                            ? Text(
+                                "$values ✅😍",
+                                style: Theme.of(context).textTheme.bodySmall,
+                                textAlign: TextAlign.start,
+                              )
+                            : Text(
+                                "$values ❌",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(color: Colors.red),
+                                textAlign: TextAlign.start,
+                              ),
+                      ],
+                    ),
+                  )
           ],
         );
       }),

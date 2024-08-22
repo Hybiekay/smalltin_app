@@ -1,4 +1,4 @@
-package com.example.smalltin
+package com.smalltin.eulogia
 
 import io.flutter.embedding.android.FlutterActivity
 

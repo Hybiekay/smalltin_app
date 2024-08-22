@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/contact_us/screens/contact_us.dart';
+import 'package:smalltin/feature/edit_profile/screen/edit_profile.dart';
+import 'package:smalltin/feature/home/controller/home_controller.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 import 'package:smalltin/widget/image_widget.dart';
 import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 
 class DrawerScreen extends StatelessWidget {
-  const DrawerScreen({super.key});
+  final HomeController homecontroller = Get.find<HomeController>();
+  DrawerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,32 +34,40 @@ class DrawerScreen extends StatelessWidget {
                       SideButton(
                         icon: AppImages.dashboard,
                         title: "Edit Profile",
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(() => EditProfile());
+                          homecontroller.reset();
+                        },
                       ),
                       SideButton(
                         icon: AppImages.message,
                         title: "Edit Fields",
                         onPressed: () {
                           Get.to(() => const ChooseField());
+                          homecontroller.reset();
                         },
                       ),
                       SideButton(
                         icon: AppImages.call,
                         title: "Contact US",
                         onPressed: () {
-                          Get.to(() => const ContactUs());
+                          Get.to(() => ContactUs());
+                          homecontroller.reset();
                         },
                       ),
                       SideButton(
                         icon: AppImages.setting,
                         title: "Settings",
-                        onPressed: () {},
+                        onPressed: () {
+                          homecontroller.reset();
+                        },
                       ),
                       SideButton(
                         icon: AppImages.logOut,
                         title: "Log Out",
                         onPressed: () {
                           authControler.logout();
+                          homecontroller.reset();
                         },
                       ),
                       const Spacer(),

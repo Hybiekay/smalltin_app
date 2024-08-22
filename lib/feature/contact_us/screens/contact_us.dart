@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smalltin/controller/user_controller.dart';
 import 'package:smalltin/feature/contact_us/controllers/chat_controller.dart';
-import 'package:smalltin/feature/widget/app_scaffold.dart';
+import 'package:smalltin/model/user_model.dart';
+import 'package:smalltin/themes/color.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import '../model/message.dart';
+import '../../widget/app_scaffold.dart';
 
 class ContactUs extends StatefulWidget {
   const ContactUs({super.key});
@@ -13,67 +15,55 @@ class ContactUs extends StatefulWidget {
 }
 
 class _ContactUsState extends State<ContactUs> {
+  String? typingUser;
+  final UserModel? user = Get.put(UserController()).userModel;
   final ChatController chatController = Get.put(ChatController());
-  final TextEditingController _messageController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    chatController.getMessages();
     chatController.messages.listen((_) {
-      // Scroll to the bottom when new messages arrive
-      Future.delayed(Duration(milliseconds: 100), () {
-        if (_scrollController.hasClients) {
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      Future.delayed(const Duration(milliseconds: 50), () {
+        if (chatController.scrollController.hasClients) {
+          print("object");
+          chatController.scrollController
+              .jumpTo(chatController.scrollController.position.minScrollExtent);
         }
       });
     });
   }
 
-  void _sendMessage() {
-    final message = _messageController.text;
-    if (message.isNotEmpty) {
-      chatController.sendMessageToAdmin(message);
-      _messageController.clear();
-      Future.delayed(Duration(milliseconds: 100), () {
-        if (_scrollController.hasClients) {
-          _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-        }
-      });
-    }
-  }
-
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appbarTitle: Row(
-        children: [
-          CircleAvatar(
-              // You can set an image here if needed
-              ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Customer Care",
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              Text(
-                "Admin",
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
-          ),
-        ],
-      ),
+      appbarTitle: GetBuilder<ChatController>(builder: (chat) {
+        return Row(
+          children: [
+            CircleAvatar(
+                // You can set an image here if needed
+                ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Customer Care",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Text(
+                  chat.typingUser ?? "Admin",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ],
+        );
+      }),
       child: Column(
         children: [
           Expanded(
@@ -85,7 +75,7 @@ class _ContactUsState extends State<ContactUs> {
 
               return ListView.builder(
                 reverse: true, // Display items in reverse order
-                controller: _scrollController,
+                controller: chatController.scrollController,
                 padding: const EdgeInsets.all(8),
                 itemCount: chatController.messages.length,
                 itemBuilder: (context, index) {
@@ -99,21 +89,22 @@ class _ContactUsState extends State<ContactUs> {
 
                   return Align(
                     alignment: isUserMessage
-                        ? Alignment.centerLeft
-                        : Alignment.centerRight,
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8, horizontal: 12),
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       decoration: BoxDecoration(
-                        color:
-                            isUserMessage ? Colors.grey[200] : Colors.blue[200],
+                        color: isUserMessage
+                            ? Colors.grey[200]
+                            : AppColor.scaffoldBg,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         crossAxisAlignment: isUserMessage
-                            ? CrossAxisAlignment.start
-                            : CrossAxisAlignment.end,
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
                         children: [
                           Text(
                             messageText,
@@ -146,9 +137,17 @@ class _ContactUsState extends State<ContactUs> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _messageController,
+                    onChanged: (v) {
+                      if (v == "") {
+                        chatController.stopTyping();
+                      } else {
+                        chatController.startTyping();
+                      }
+                    },
+                    controller: chatController.messageController,
                     decoration: InputDecoration(
                       hintText: "Type a message",
+                      hintStyle: Theme.of(context).textTheme.bodySmall,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -159,7 +158,7 @@ class _ContactUsState extends State<ContactUs> {
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: _sendMessage,
+                  onPressed: chatController.sendMessage,
                   child: const Text("Send"),
                 ),
               ],

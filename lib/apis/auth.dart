@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
 import 'package:smalltin/core/constants/api_string.dart';
 
 class AuthService {
@@ -16,6 +18,7 @@ class AuthService {
         headers: {"accept": "application/json"},
         body: {"email": email},
       );
+      debugPrint(res.statusCode.toString());
       debugPrint(res.statusCode.toString());
       log(res.body);
       return res;
@@ -129,6 +132,25 @@ class AuthService {
     }
   }
 
+  Future<http.Response?> updateBio(String username, String token) async {
+    try {
+      var res = await http.post(
+        ApiString.endPoint("update"),
+        headers: {
+          "accept": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: {
+          "user_bio": username,
+        },
+      );
+      debugPrint(res.statusCode.toString());
+      return res;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future updateFields(
     final List<int> field,
     final String token,
@@ -217,6 +239,43 @@ class AuthService {
       return res;
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<void> uploadProfileImage(File imageFile, String token) async {
+    try {
+      // Create a multipart request
+      var request = http.MultipartRequest('POST', ApiString.endPoint("update"));
+
+      // Add authorization header if required
+      request.headers['Authorization'] = 'Bearer $token';
+
+      // Get the mime type of the file
+      final mimeType = lookupMimeType(imageFile.path);
+
+      // Attach the file using fromPath, which automatically handles the file path
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'profile', // The name expected by the server
+          imageFile.path,
+        ),
+      );
+
+      // Send the request
+      var response = await request.send();
+
+      // Check the response status
+      if (response.statusCode == 200) {
+        // Success
+        var responseData = await response.stream.bytesToString();
+        var jsonResponse = jsonDecode(responseData);
+        print('Upload successful: $jsonResponse');
+      } else {
+        // Error
+        print('Upload failed: ${response.statusCode}   ${response.stream}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 }

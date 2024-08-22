@@ -14,7 +14,9 @@ class UserCard extends StatelessWidget {
       child: ListTile(
         title: Text(capitalizeFirstLetter(user.userDetails.username)),
         subtitle: Text(
-            'Correct Answers: ${user.correctAnswers}, Incorrect Answers: ${user.incorrectAnswers}'),
+          'Correct Answers: ${user.correctAnswers}, Incorrect Answers: ${user.incorrectAnswers}',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ),
     );
   }

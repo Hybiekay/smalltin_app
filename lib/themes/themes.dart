@@ -7,6 +7,7 @@ class AppThemes {
   static ThemeData lightTheme = ThemeData.light().copyWith(
       cardColor: AppColor.pColor,
       canvasColor: AppColor.scaffoldBg,
+      
       textTheme: TextTheme(
         titleLarge: GoogleFonts.inter(
           fontSize: 24.sp,

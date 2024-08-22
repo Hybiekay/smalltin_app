@@ -16,6 +16,7 @@ class CreatePassword extends StatefulWidget {
 }
 
 class _CreatePasswordState extends State<CreatePassword> {
+  bool isObucure = true;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(builder: (authController) {
@@ -46,29 +47,11 @@ class _CreatePasswordState extends State<CreatePassword> {
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: authController.passwordEditingController,
-                        style: Theme.of(context).textTheme.bodySmall,
-                        decoration: InputDecoration(
-                          hintText: "Enter Your Password here",
-                          hintStyle: Theme.of(context).textTheme.bodySmall,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10.w),
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    AuthButton(
-                      onTap: () {
-                        authController.updatePassword(context);
-                      },
-                    ),
-                  ],
+                child: PasswordTextField(
+                  controller: authController.passwordEditingController,
+                  onTap: () {
+                    authController.updatePassword(context);
+                  },
                 )),
             const SizedBox(
               height: 15,
@@ -77,6 +60,50 @@ class _CreatePasswordState extends State<CreatePassword> {
         ),
       );
     });
+  }
+}
+
+class PasswordTextField extends StatefulWidget {
+  const PasswordTextField({super.key, this.controller, required this.onTap});
+  final TextEditingController? controller;
+
+  final VoidCallback onTap;
+
+  @override
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+  bool isObucure = true;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            obscureText: isObucure,
+            controller: widget.controller,
+            style: Theme.of(context).textTheme.bodySmall,
+            decoration: InputDecoration(
+                hintText: "Enter Your Password here",
+                hintStyle: Theme.of(context).textTheme.bodySmall,
+                contentPadding: EdgeInsets.all(10.w),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isObucure = !isObucure;
+                      });
+                    },
+                    child: Icon(
+                        isObucure ? Icons.visibility : Icons.visibility_off))),
+          ),
+        ),
+        AuthButton(onTap: widget.onTap),
+      ],
+    );
   }
 }
 
@@ -121,31 +148,11 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
                         ),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: authController
-                                  .confrimPasswordEditingController,
-                              style: Theme.of(context).textTheme.bodySmall,
-                              decoration: InputDecoration(
-                                hintText: "Enter Your Password here",
-                                hintStyle:
-                                    Theme.of(context).textTheme.bodySmall,
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10.w),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          AuthButton(
-                            onTap: () {
-                              authController.updateMainPassword(context);
-                            },
-                          ),
-                        ],
+                      child: PasswordTextField(
+                        controller: authController.confrimPasswordEditingController,
+                        onTap: () {
+                          authController.updateMainPassword(context);
+                        },
                       )),
                   const SizedBox(
                     height: 15,

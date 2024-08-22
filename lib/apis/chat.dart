@@ -22,13 +22,15 @@ class ChatApi {
         },
       );
       debugPrint(res.statusCode.toString());
-      log(res.body.toString());
 
       var response = json.decode(res.body);
-      var data = response["data"] as List<dynamic>; // Ensure data is a List<dynamic>
+      var data =
+          response["data"] as List<dynamic>; // Ensure data is a List<dynamic>
 
       // Convert dynamic list to List<Message>
-      return data.map((msg) => Message.fromJson(msg as Map<String, dynamic>)).toList();
+      return data
+          .map((msg) => Message.fromJson(msg as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       log(e.toString());
       return [];

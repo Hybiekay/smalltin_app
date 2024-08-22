@@ -6,8 +6,8 @@ import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 import 'package:smalltin/themes/color.dart';
+import 'package:smalltin/widget/bubble.dart';
 import 'package:smalltin/widget/next_button.dart';
-
 
 class ChooseSubField extends StatefulWidget {
   final List<int> mainField;
@@ -77,11 +77,11 @@ class _ChooseSubFieldState extends State<ChooseSubField> {
                                       });
                                     },
                                     child: bubble(
-                                      bub.name,
-                                      getColorFromHex(bub.color),
-                                      bub.size.toDouble(),
-                                      selectedSubfields.contains(bub.id),
-                                    ),
+                                        bub.name,
+                                        getColorFromHex(bub.color),
+                                        bub.size.toDouble(),
+                                        selectedSubfields.contains(bub.id),
+                                        context),
                                   ))
                               .toList(),
                         ),
@@ -92,50 +92,5 @@ class _ChooseSubFieldState extends State<ChooseSubField> {
         );
       });
     });
-  }
-
-  Widget bubble(String text, Color color, double size, bool isSelected) {
-    return Container(
-      width: size < 70
-          ? 70
-          : size > 140
-              ? 150
-              : size,
-      height: size < 70
-          ? 70
-          : size > 140
-              ? 140
-              : size,
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: isSelected ? AppColor.gray : color,
-        shape: BoxShape.circle,
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              softWrap: true,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          if (isSelected)
-            const Positioned(
-              right: 5,
-              bottom: 5,
-              child: Icon(
-                Icons.check_circle,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-        ],
-      ),
-    );
   }
 }

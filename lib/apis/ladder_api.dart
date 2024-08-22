@@ -27,7 +27,7 @@ class LadderApi {
       var response = json.decode(res.body);
       var data = response;
       log("hehljdsgj c");
-      var user = MonthlyStatResponse.fromJson(response["data"]);
+       var user = MonthlyStatResponse.fromJson(response["data"]);
       print(user);
       return user;
     } catch (e) {

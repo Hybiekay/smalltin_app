@@ -2,27 +2,25 @@ class LadderUser {
   final int id;
   final String username;
   final String email;
+  final String? profile;
 
   LadderUser({
     required this.id,
     required this.username,
     required this.email,
+    required this.profile,
   });
 
   factory LadderUser.fromJson(Map<String, dynamic> json) {
     return LadderUser(
-      id: json['id'],
-      username: json['username'],
-      email: json['email'],
-    );
+        id: json['id'],
+        username: json['username'],
+        email: json['email'],
+        profile: json["profile"]);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'username': username,
-      'email': email,
-    };
+    return {'id': id, 'username': username, 'email': email, "profile": profile};
   }
 }
 

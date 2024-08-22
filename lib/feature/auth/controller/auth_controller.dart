@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -81,7 +82,9 @@ class AuthController extends GetxController {
       var res = await _authService.loginWithPassword(
           emailEditingController.text, passEditingController.text);
       isBusy = false;
+
       update();
+
       if (res != null) {
         var data = jsonDecode(res.body);
         box.write('token', data["token"]);
@@ -199,7 +202,7 @@ class AuthController extends GetxController {
                   },
                   context: context,
                   buttonText: "Let's go",
-                  message: "You haven't selected any fields yet.");
+                  message: "It time to shows your you unique identity");
             } else if (data["user"]["fields"] == null) {
               AppDailog.error(
                   title: data["message"],
@@ -230,7 +233,6 @@ class AuthController extends GetxController {
                   message: "You haven't selected any subfields yet.");
             }
           } else {
-            
             AppDailog.error(
                 onPressed: () {
                   Get.back();
@@ -246,54 +248,34 @@ class AuthController extends GetxController {
 
   updateName(BuildContext context) async {
     var token = box.read("token");
-    if (nameEditingController.text.length < 3) {
-      AppDailog.error(
-          onPressed: () {
-            Get.back();
-          },
-          context: context,
-          buttonText: "Back",
-          message: "Name Is less Then the required lenght");
-    } else {
-      isBusy = true;
-      update();
-      var res =
-          await _authService.updateName(nameEditingController.text, token);
-      isBusy = false;
-      update();
-      if (res != null) {
-        var data = jsonDecode(res.body);
-        if (res.statusCode == 200) {
-          if (data["user"]["fields"] == null) {
-            AppDailog.error(
-                title: data["message"],
-                onPressed: () {
-                  Get.off(() => const ChooseField());
-                },
-                context: context,
-                buttonText: "Let's go",
-                message: "You haven't selected any fields yet.");
-          } else if (data["user"]["sub_fields"] == null) {
-            AppDailog.error(
-                onPressed: () {
-                  Get.off(() => ChooseSubField(
-                        mainField: data["user"]["fields"],
-                      ));
-                },
-                context: context,
-                buttonText: "Let's go",
-                message: "You haven't selected any subfields yet.");
-          }
-        } else {
-          AppDailog.error(
-              onPressed: () {
-                Get.back();
-              },
-              context: context,
-              title: "Use another username",
-              buttonText: "Back",
-              message: data["message"]);
-        }
+
+    isBusy = true;
+    update();
+    var res =
+        await _authService.updateName(nameEditingController.text.trim(), token);
+    isBusy = false;
+    update();
+    if (res != null) {
+      var data = jsonDecode(res.body);
+      if (res.statusCode == 200) {
+        return "Your username is available.";
+      } else {
+        return "Opos! ${data["message"]}";
+      }
+    }
+  }
+
+  updateBio(BuildContext context, String bio) async {
+    var token = box.read("token");
+
+    var res = await _authService.updateBio(bio.trim(), token);
+
+    if (res != null) {
+      var data = jsonDecode(res.body);
+      if (res.statusCode == 200) {
+        return "Your username is available.";
+      } else {
+        return "Opos! ${data["message"]}";
       }
     }
   }
@@ -392,5 +374,10 @@ class AuthController extends GetxController {
     update();
 
     Get.offAll(() => const SignInScreen());
+  }
+
+  uploadImage(File image) {
+    var token = box.read("token");
+    _authService.uploadProfileImage(image, token);
   }
 }
