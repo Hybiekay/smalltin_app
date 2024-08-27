@@ -117,7 +117,7 @@ class _UpdateNameState extends State<UpdateName> {
                                 textAlign: TextAlign.start,
                               )
                             : Text(
-                                "$values ❌",
+                               values ==''? '':  "$values ❌",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!

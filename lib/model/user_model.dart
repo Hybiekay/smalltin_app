@@ -2,7 +2,7 @@
 class UserModel {
   final int id;
   final String username;
-  final String email;
+  final String? email;
   final bool isVerified;
   final String? userBio;
   final int totalQuestionAttempt;
@@ -80,8 +80,8 @@ class UserModel {
 // Field model
 class Field {
   final int id;
-  final String name;
-  final String color;
+  final String? name;
+  final String? color;
   final int size;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -126,8 +126,8 @@ class Field {
 class SubField {
   final int id;
   final int fieldId;
-  final String name;
-  final String color;
+  final String? name;
+  final String? color;
   final int size;
   final DateTime createdAt;
   final DateTime updatedAt;

@@ -38,6 +38,7 @@ class UserController extends GetxController {
     var res = await _authService.getUser();
     if (res != null && res.statusCode == 200) {
       var data = json.decode(res.body);
+      log("the data : ${data.toString()}");
       var userRessponse = UserModel.fromJson(data["data"]);
       userModel = userRessponse;
       update();

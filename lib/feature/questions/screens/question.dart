@@ -45,10 +45,10 @@ class _QuestionState extends State<Question> {
           ],
         ),
         appbarActions: const [
-          AppBarButton(
-            title: "Total Job\$",
-            subTitle: "500\$",
-          )
+          // AppBarButton(
+          //   title: "Total Job\$",
+          //   subTitle: "500\$",
+          // )
         ],
         child: quizController.isBusy
             ? const Loading()

@@ -22,6 +22,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController textEditingController = TextEditingController();
   String values = '';
   bool correct = false;
+
   File? image;
   @override
   Widget build(BuildContext context) {
@@ -126,7 +127,7 @@ class _EditProfileState extends State<EditProfile> {
                                     textAlign: TextAlign.start,
                                   )
                                 : Text(
-                                    "$values ❌",
+                                  values ==''? '':  "$values ❌",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!

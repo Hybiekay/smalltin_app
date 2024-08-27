@@ -29,6 +29,19 @@ class AuthController extends GetxController {
 
   final AuthService _authService = AuthService();
 
+
+@override
+  void onClose() {
+   emailEditingController.dispose();
+   otpEditingController.dispose();
+   passwordEditingController.dispose();
+   passEditingController.dispose();
+   nameEditingController.dispose();
+   confrimPasswordEditingController.dispose();
+    super.onClose();
+  }
+
+
   checkUSer(BuildContext context) async {
     if (emailEditingController.text.isEmail) {
       isBusy = true;

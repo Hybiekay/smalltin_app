@@ -3,12 +3,14 @@ class LadderUser {
   final String username;
   final String email;
   final String? profile;
+  final String? userBio;
 
   LadderUser({
     required this.id,
     required this.username,
     required this.email,
     required this.profile,
+    this.userBio
   });
 
   factory LadderUser.fromJson(Map<String, dynamic> json) {
@@ -16,11 +18,13 @@ class LadderUser {
         id: json['id'],
         username: json['username'],
         email: json['email'],
-        profile: json["profile"]);
+        profile: json["profile"],
+        userBio:json["user_bio"]
+        );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'username': username, 'email': email, "profile": profile};
+    return {'id': id, 'username': username, 'email': email, "profile": profile, "user_bio":userBio};
   }
 }
 
@@ -30,7 +34,8 @@ class MonthlyStat {
   final int correctAnswers;
   final int incorrectAnswers;
   final int totalAttempts;
-  final String month;
+  final int? monthlyJobs;
+  // final String month;
   final String createdAt;
   final String updatedAt;
   final LadderUser userDetails;
@@ -41,7 +46,8 @@ class MonthlyStat {
     required this.correctAnswers,
     required this.incorrectAnswers,
     required this.totalAttempts,
-    required this.month,
+    this.monthlyJobs,
+    // required this.month,
     required this.createdAt,
     required this.updatedAt,
     required this.userDetails,
@@ -53,8 +59,9 @@ class MonthlyStat {
       userId: json['user_id'],
       correctAnswers: json['correct_answers'],
       incorrectAnswers: json['incorrect_answers'],
+      monthlyJobs: json["monthly_jobs"],
       totalAttempts: json['total_attempts'],
-      month: json['month'],
+      // month: json['month'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       userDetails: LadderUser.fromJson(json['user']),
@@ -68,7 +75,8 @@ class MonthlyStat {
       'correct_answers': correctAnswers,
       'incorrect_answers': incorrectAnswers,
       'total_attempts': totalAttempts,
-      'month': month,
+      "monthly_jobs":monthlyJobs,
+      // 'month': month,
       'created_at': createdAt,
       'updated_at': updatedAt,
       'user': userDetails.toJson(),

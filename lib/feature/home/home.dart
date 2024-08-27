@@ -38,11 +38,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        DrawerScreen(),
-        FrontPage(),
-      ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              DrawerScreen(),
+              FrontPage(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -159,7 +166,7 @@ class _FrontPageState extends State<FrontPage> {
                 const DarkModeSwitch(),
                 AppBarButton(
                   title: "Total Job\$",
-                  subTitle: "${user?.jobs} \$",
+                  subTitle: "${user?.jobs ?? 0} \$",
                 )
               ],
               child: RefreshIndicator(
@@ -173,33 +180,40 @@ class _FrontPageState extends State<FrontPage> {
                     children: [
                       const SizedBox(height: 20),
                       Text(
-                          "Total Question Attempt: ${user?.totalQuestionAttempt}"),
+                          "Total Question Attempt: ${user?.totalQuestionAttempt ?? 0}"),
                       Text(
-                        "Total Question Correct: ${user?.totalQuestionCorrect}",
+                        "Total Question Correct: ${user?.totalQuestionCorrect ?? 0}",
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          BoxCard(
-                            text: "Attempt",
-                            onTap: () {
-                              Get.to(() => const Question());
-                            },
-                            isButton: true,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                         width:MediaQuery.of(context).size.width - 25,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              BoxCard(
+                                text: "Attempt",
+                                onTap: () {
+                                  Get.to(() => const Question());
+                                },
+                                isButton: true,
+                              ),
+                              BoxCard(
+                                text: "Total  Q Attempt",
+                                subText: "${user?.totalQuestionAttempt ?? 0}",
+                              ),
+                              BoxCard(
+                                text: "Total  Correct",
+                                subText: "${user?.totalQuestionCorrect ?? 0}",
+                              ),
+                              
+                            ],
                           ),
-                          BoxCard(
-                            text: "Total  Q Attempt",
-                            subText: "${user?.totalQuestionAttempt}",
-                          ),
-                          BoxCard(
-                            text: "Total  Correct",
-                            subText: "${user?.totalQuestionCorrect}",
-                          ),
-                        ],
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
@@ -281,7 +295,7 @@ class _FrontPageState extends State<FrontPage> {
                                           ),
                                           TextSpan(
                                             text: firstUser != null
-                                                ? " ${firstUser.correctAnswers * 50} +"
+                                                ? " ${firstUser.monthlyJobs ?? 0} +"
                                                 : "0",
                                             style: Theme.of(context)
                                                 .textTheme
@@ -470,7 +484,8 @@ class BoxCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 54,
-        width: 110,
+        width: 100,
+        margin: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(15),

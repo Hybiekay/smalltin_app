@@ -1,4 +1,3 @@
-import 'dart:io';
 
 class ApiString {
   static Uri endPoint(String url) {
@@ -7,13 +6,14 @@ class ApiString {
   }
 
   static String socketUrl() {
-    if (Platform.isAndroid) {
-      // return "http://10.0.2.2:3000";
-      return "https://smalltin.com";
-    } else {
-      // return "http://localhost:3000";
-      return "https://smalltin.com";
-    }
+    return "realtime.smalltin.com";
+    // if (Platform.isAndroid) {
+    //   // return "http://10.0.2.2:3000";
+    //   return "https://realtime.smalltin.com";
+    // } else {
+    //   // return "http://localhost:3000";
+    //   return "https://realtime.smalltin.com";
+    // }
   }
 
   static String imageUrl(String url) {
