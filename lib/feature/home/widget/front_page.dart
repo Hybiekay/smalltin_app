@@ -141,14 +141,28 @@ class _FrontPageState extends State<FrontPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 20),
-                      Text(
-                          "Total Question Attempt: ${userController.userModel?.totalQuestionAttempt ?? 0}"),
-                      Text(
-                        "Total Question Correct: ${userController.userModel?.totalQuestionAttempt ?? 0}",
-                      ),
-                      const SizedBox(
-                        height: 20,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                  "Total Question Attempt: ${userController.userModel?.totalQuestionAttempt ?? 0}"),
+                              Text(
+                                "Total Question Correct: ${userController.userModel?.totalQuestionAttempt ?? 0}",
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                          Container(
+                            child: const Text(
+                              '1 Job\$ is 1 Naira',
+                            ),
+                          )
+                        ],
                       ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -196,7 +210,7 @@ class _FrontPageState extends State<FrontPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const CardButton(
-                                  text: "First Position",
+                                  text: "Top User",
                                 ),
                                 const SizedBox(
                                   height: 10,
@@ -259,8 +273,8 @@ class _FrontPageState extends State<FrontPage> {
                                 ),
                                 Text(
                                   user?.id == firstUser?.userDetails.id
-                                      ? "You Are taking the first Position \nKeep it Going"
-                                      : "You Are Not the First \nPosition. Try to Answer \nmore questions to beat it",
+                                      ? "You are the top user! \nKeep it up!"
+                                      : "You are not the top user. \nTry answering more questions \nto climb the ranks.",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!

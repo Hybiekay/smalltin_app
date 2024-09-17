@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/feature/home/home.dart';
 import 'package:smalltin/themes/color.dart';
-import 'package:smalltin/widget/quizbutton.dart'; 
+import 'package:smalltin/widget/quizbutton.dart';
 
 import '../feature/questions/controllers/quiz_controller.dart';
 
@@ -41,12 +41,11 @@ class _TimeUPState extends State<TimeUP> {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            
             const SizedBox(
               height: 20,
             ),
             Text(
-              "You don't earn anything because you don't keep to time",
+              "You haven't earned anything because you didn't keep to the time.",
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme

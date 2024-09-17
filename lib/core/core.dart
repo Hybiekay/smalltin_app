@@ -23,6 +23,12 @@ String capitalizeFirstLetter(String text) {
   return text[0].toUpperCase() + text.substring(1).toLowerCase();
 }
 
+String formatTime(int seconds) {
+  final minutes = seconds ~/ 60;
+  final remainingSeconds = seconds % 60;
+  return '${minutes}:${remainingSeconds.toString().padLeft(2, '0')}';
+}
+
 Future<File?> pickProfileImage(ImageSource source) async {
   var file = await ImagePicker().pickImage(source: source);
 

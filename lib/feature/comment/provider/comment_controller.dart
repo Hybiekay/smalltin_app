@@ -1,18 +1,37 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart'; // Import GetStorage
 import 'package:http/http.dart' as http;
+import 'package:smalltin/core/constants/api_string.dart';
 import 'dart:convert';
 
 import '../model/comment.dart';
 
 class CommentController extends GetxController {
-  RxBool isLoading = false.obs;
   // Use RxList to make the comments list observable
   RxList<Comment> comments = <Comment>[].obs;
 
+  // Initialize GetStorage to retrieve the token
+  final box = GetStorage();
+  var token;
+
+  @override
+  void onInit() {
+    super.onInit();
+    token = box.read("token"); // Read the token from storage
+  }
+
   // Fetch all comments for a specific MonthlyStat
   Future<void> fetchComments(int monthlyStatId) async {
-    final url = 'https://yourapi.com/monthly-stats/$monthlyStatId/comments';
-    final response = await http.get(Uri.parse(url));
+    final url = ApiString.endPoint('monthly-stats/$monthlyStatId/comments');
+
+    // Add Authorization header
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Add the token here
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> commentData = json.decode(response.body);
@@ -25,10 +44,15 @@ class CommentController extends GetxController {
 
   // Add a new comment
   Future<void> addComment(int monthlyStatId, String commentText) async {
-    final url = 'https://yourapi.com/monthly-stats/$monthlyStatId/comments';
+    final url = ApiString.endPoint('monthly-stats/$monthlyStatId/comments');
+
+    // Add Authorization header
     final response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Add the token here
+      },
       body: json.encode({'comment': commentText}),
     );
 
@@ -42,10 +66,15 @@ class CommentController extends GetxController {
 
   // Update an existing comment
   Future<void> updateComment(int commentId, String updatedText) async {
-    final url = 'https://yourapi.com/comments/$commentId';
+    final url = ApiString.endPoint('comments/$commentId');
+
+    // Add Authorization header
     final response = await http.put(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Add the token here
+      },
       body: json.encode({'comment': updatedText}),
     );
 
@@ -62,8 +91,16 @@ class CommentController extends GetxController {
 
   // Delete a comment
   Future<void> deleteComment(int commentId) async {
-    final url = 'https://yourapi.com/comments/$commentId';
-    final response = await http.delete(Uri.parse(url));
+    final url = ApiString.endPoint('comments/$commentId');
+
+    // Add Authorization header
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Add the token here
+      },
+    );
 
     if (response.statusCode == 200) {
       comments.removeWhere((comment) => comment.id == commentId);

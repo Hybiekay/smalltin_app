@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/questions/controllers/quiz_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
@@ -35,7 +36,7 @@ class _QuestionState extends State<Question> {
           children: [
             AppBarButton(
               title: "Timer",
-              subTitle: "${quizController.time}",
+              subTitle: formatTime(quizController.time),
             ),
             Text(
               "Question ${quizController.questionCount} of 10",

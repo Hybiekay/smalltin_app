@@ -68,9 +68,9 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
           // Comments ListView with GetX reactive state
           Expanded(
             child: Obx(() {
-              if (commentController.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
-              }
+              // if (commentController.isLoading.value) {
+              //   return const Center(child: CircularProgressIndicator());
+              // }
 
               return commentController.comments.isNotEmpty
                   ? ListView.builder(

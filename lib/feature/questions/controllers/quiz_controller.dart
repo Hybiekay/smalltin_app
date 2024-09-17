@@ -8,13 +8,13 @@ import 'package:smalltin/widget/time_up.dart';
 import '../model/question_model.dart';
 
 class QuizController extends GetxController {
-  Timer? timer;
+  Timer? _timer;
   String? gameToken;
   final box = GetStorage();
   QuestionModel? questionModel;
   bool isBusy = false;
   int questionCount = 1;
-  int time = 50;
+  int time = 80;
 
   List<Map> option = [
     {"A": "Hemoglobin"},
@@ -26,17 +26,22 @@ class QuizController extends GetxController {
   final QuizApi _quizApi = QuizApi();
 
   startCounting() async {
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (time > 1) {
         time--;
         update();
+      } else {
+        timer.cancel();
+        _timer?.cancel();
+
+        Get.dialog(TimeUP(data: {}));
       }
     });
   }
 
   startQuiz() async {
-    timer?.cancel();
-    time = 50;
+    _timer?.cancel();
+    time = 80;
     questionCount = 1;
     option = [];
     isBusy = true;
@@ -63,7 +68,7 @@ class QuizController extends GetxController {
   answerQuestion({
     required String answer,
   }) async {
-    if (time == 50) {
+    if (time == 80) {
       startCounting();
     }
     isBusy = true;
@@ -78,7 +83,7 @@ class QuizController extends GetxController {
         questionCount = data["current_question_index"] + 1;
         update();
       } else {
-        timer?.cancel();
+        _timer?.cancel();
       }
       var question = QuestionModel.fromJson(data["next_question"]);
       questionModel = question;
@@ -94,7 +99,7 @@ class QuizController extends GetxController {
       var data = json.decode(res.body);
       Get.dialog(EndGame(data: data));
     } else if (res.statusCode == 401) {
-      timer?.cancel();
+      _timer?.cancel();
       time = 0;
       var data = json.decode(res.body);
       Get.dialog(TimeUP(data: data));
