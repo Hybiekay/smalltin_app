@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +26,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appbarTitle: Text(
+      appbarTitle: const Text(
         "Edit Profile",
         style: TextStyle(
           color: AppColor.gray,
@@ -36,7 +35,7 @@ class _EditProfileState extends State<EditProfile> {
       ),
       child: SingleChildScrollView(
         child: GetBuilder<AuthController>(builder: (authController) {
-          return Container(
+          return SizedBox(
             height: MediaQuery.of(context).size.height - 100,
             child: Column(
               children: [
@@ -58,11 +57,11 @@ class _EditProfileState extends State<EditProfile> {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
+                          padding: const EdgeInsets.all(5),
+                          decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColor.scaffoldBg),
-                          child: Icon(
+                          child: const Icon(
                             Icons.edit,
                             color: Colors.white,
                           ),
@@ -78,9 +77,8 @@ class _EditProfileState extends State<EditProfile> {
                     var value = await authController.updateName(
                       context,
                     );
-                    print(value.runtimeType);
+                    debugPrint(value.runtimeType.toString());
                     if (v.length < 3) {
-                      print(v.length);
                       setState(() {
                         correct = false;
                         values = "Name Is less Then the required lenght";
@@ -111,11 +109,11 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 authController.isBusy
-                    ? Align(
+                    ? const Align(
                         alignment: Alignment.bottomLeft,
                         child: CircularProgressIndicator(),
                       )
-                    : Container(
+                    : SizedBox(
                         width: double.infinity,
                         child: Row(
                           children: [

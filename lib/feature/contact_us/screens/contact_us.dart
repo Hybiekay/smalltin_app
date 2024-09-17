@@ -25,7 +25,7 @@ class _ContactUsState extends State<ContactUs> {
     chatController.messages.listen((_) {
       Future.delayed(const Duration(milliseconds: 50), () {
         if (chatController.scrollController.hasClients) {
-          print("object");
+          debugPrint("object");
           chatController.scrollController
               .jumpTo(chatController.scrollController.position.minScrollExtent);
         }
@@ -44,7 +44,7 @@ class _ContactUsState extends State<ContactUs> {
       appbarTitle: GetBuilder<ChatController>(builder: (chat) {
         return Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
                 // You can set an image here if needed
                 ),
             const SizedBox(width: 10),
@@ -70,7 +70,7 @@ class _ContactUsState extends State<ContactUs> {
             child: Obx(() {
               // Ensure messages are loaded and correctly formatted
               if (chatController.messages.isEmpty) {
-                return Center(child: Text("No messages yet"));
+                return const Center(child: Text("No messages yet"));
               }
 
               return ListView.builder(

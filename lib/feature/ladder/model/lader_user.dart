@@ -5,13 +5,12 @@ class LadderUser {
   final String? profile;
   final String? userBio;
 
-  LadderUser({
-    required this.id,
-    required this.username,
-    required this.email,
-    required this.profile,
-    this.userBio
-  });
+  LadderUser(
+      {required this.id,
+      required this.username,
+      required this.email,
+      required this.profile,
+      this.userBio});
 
   factory LadderUser.fromJson(Map<String, dynamic> json) {
     return LadderUser(
@@ -19,12 +18,17 @@ class LadderUser {
         username: json['username'],
         email: json['email'],
         profile: json["profile"],
-        userBio:json["user_bio"]
-        );
+        userBio: json["user_bio"]);
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'username': username, 'email': email, "profile": profile, "user_bio":userBio};
+    return {
+      'id': id,
+      'username': username,
+      'email': email,
+      "profile": profile,
+      "user_bio": userBio
+    };
   }
 }
 
@@ -36,6 +40,7 @@ class MonthlyStat {
   final int totalAttempts;
   final int? monthlyJobs;
   // final String month;
+  final int? commentCount; //
   final String createdAt;
   final String updatedAt;
   final LadderUser userDetails;
@@ -47,6 +52,7 @@ class MonthlyStat {
     required this.incorrectAnswers,
     required this.totalAttempts,
     this.monthlyJobs,
+    this.commentCount,
     // required this.month,
     required this.createdAt,
     required this.updatedAt,
@@ -61,6 +67,7 @@ class MonthlyStat {
       incorrectAnswers: json['incorrect_answers'],
       monthlyJobs: json["monthly_jobs"],
       totalAttempts: json['total_attempts'],
+      commentCount: json["comment_count"],
       // month: json['month'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
@@ -75,7 +82,8 @@ class MonthlyStat {
       'correct_answers': correctAnswers,
       'incorrect_answers': incorrectAnswers,
       'total_attempts': totalAttempts,
-      "monthly_jobs":monthlyJobs,
+      "monthly_jobs": monthlyJobs,
+      "comment_count": commentCount,
       // 'month': month,
       'created_at': createdAt,
       'updated_at': updatedAt,

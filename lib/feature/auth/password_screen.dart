@@ -7,7 +7,6 @@ import 'package:smalltin/feature/auth/update_password.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 
-import '../../widget/auth_button.dart';
 
 class PasswordScreen extends StatefulWidget {
   const PasswordScreen({super.key});

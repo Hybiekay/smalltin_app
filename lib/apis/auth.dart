@@ -251,7 +251,7 @@ class AuthService {
       request.headers['Authorization'] = 'Bearer $token';
 
       // Get the mime type of the file
-      final mimeType = lookupMimeType(imageFile.path);
+      lookupMimeType(imageFile.path);
 
       // Attach the file using fromPath, which automatically handles the file path
       request.files.add(
@@ -268,14 +268,12 @@ class AuthService {
       if (response.statusCode == 200) {
         // Success
         var responseData = await response.stream.bytesToString();
-        var jsonResponse = jsonDecode(responseData);
-        print('Upload successful: $jsonResponse');
+        jsonDecode(responseData);
       } else {
         // Error
-        print('Upload failed: ${response.statusCode}   ${response.stream}');
       }
     } catch (e) {
-      print('Error: $e');
+      debugPrint("$e");
     }
   }
 }

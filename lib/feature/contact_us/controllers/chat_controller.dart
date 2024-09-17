@@ -53,7 +53,7 @@ class ChatController extends GetxController {
       // Debounce duration example:
       debounce(messageController.text.obs, (_) {
         stopTyping();
-      }, time: Duration(seconds: 1));
+      }, time: const Duration(seconds: 1));
     }
   }
 
@@ -138,7 +138,7 @@ class ChatController extends GetxController {
       var fetchedMessages = await chatApi.getConversation();
       messages.value = fetchedMessages;
     } catch (e) {
-      print("Error fetching messages: $e");
+      debugPrint("Error fetching messages: $e");
     }
   }
 
@@ -152,7 +152,7 @@ class ChatController extends GetxController {
         }
       }
     } catch (e) {
-      print("Error sending message: $e");
+      debugPrint("Error sending message: $e");
     }
   }
 

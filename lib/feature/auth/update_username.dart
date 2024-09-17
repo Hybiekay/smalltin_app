@@ -53,9 +53,7 @@ class _UpdateNameState extends State<UpdateName> {
                       child: TextField(
                         onChanged: (v) async {
                           var value = await authController.updateName(context);
-                          print(value.runtimeType);
                           if (v.length < 3) {
-                            print(v.length);
                             setState(() {
                               correct = false;
                               values = "Name Is less Then the required lenght";
@@ -88,7 +86,7 @@ class _UpdateNameState extends State<UpdateName> {
                     AuthButton(
                       onTap: () {
                         if (correct) {
-                          Get.to(() => ChooseField());
+                          Get.to(() => const ChooseField());
                         } else {
                           Get.snackbar("Change Your username",
                               "Try to use a unique username, because the on you choose has already been use",
@@ -102,11 +100,11 @@ class _UpdateNameState extends State<UpdateName> {
               height: 15,
             ),
             authController.isBusy
-                ? Align(
+                ? const Align(
                     alignment: Alignment.bottomLeft,
                     child: CircularProgressIndicator(),
                   )
-                : Container(
+                : SizedBox(
                     width: double.infinity,
                     child: Row(
                       children: [

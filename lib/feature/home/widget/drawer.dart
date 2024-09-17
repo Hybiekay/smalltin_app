@@ -35,7 +35,7 @@ class DrawerScreen extends StatelessWidget {
                         icon: AppImages.dashboard,
                         title: "Edit Profile",
                         onPressed: () {
-                          Get.to(() => EditProfile());
+                          Get.to(() => const EditProfile());
                           homecontroller.reset();
                         },
                       ),
@@ -51,7 +51,7 @@ class DrawerScreen extends StatelessWidget {
                         icon: AppImages.call,
                         title: "Contact US",
                         onPressed: () {
-                          Get.to(() => ContactUs());
+                          Get.to(() => const ContactUs());
                           homecontroller.reset();
                         },
                       ),
