@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/feature/home/home.dart';
+import 'package:smalltin/feature/ladder/controller/ladder_controller.dart';
 import 'package:smalltin/feature/questions/controllers/quiz_controller.dart';
 import 'package:smalltin/themes/color.dart';
 import 'package:smalltin/widget/quizbutton.dart';
@@ -65,6 +66,7 @@ class _EndGameState extends State<EndGame> {
               onTap: () {
                 Get.back();
                 quizController.startQuiz();
+                // Get.put(LadderController()).fetchUsers();
               },
             ),
             const SizedBox(
@@ -74,6 +76,7 @@ class _EndGameState extends State<EndGame> {
               text: "End Quiz",
               onTap: () {
                 Get.offAll(() => const HomeScreen());
+                Get.put(LadderController()).fetchUsers();
               },
             )
           ],

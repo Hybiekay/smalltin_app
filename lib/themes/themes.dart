@@ -8,30 +8,30 @@ class AppThemes {
       canvasColor: AppColor.scaffoldBg,
       textTheme: TextTheme(
         titleLarge: GoogleFonts.inter(
-          fontSize: 24,
+          fontSize: 26,
           fontWeight: FontWeight.bold,
           color: LightModeColor.textColor,
         ),
         titleMedium: GoogleFonts.inter(
-          fontSize: 22,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: LightModeColor.textColor,
         ),
         titleSmall: GoogleFonts.inter(
-          fontSize: 20,
+          fontSize: 22,
           fontWeight: FontWeight.bold,
           color: LightModeColor.textColor,
         ),
         bodySmall: GoogleFonts.inter(
-          fontSize: 12,
+          fontSize: 13.8,
           color: LightModeColor.textColor,
         ),
         bodyMedium: GoogleFonts.inter(
-          fontSize: 13,
+          fontSize: 15,
           color: LightModeColor.textColor,
         ),
         bodyLarge: GoogleFonts.inter(
-          fontSize: 16,
+          fontSize: 18,
           color: LightModeColor.textColor,
         ),
       ),
@@ -56,30 +56,30 @@ class AppThemes {
   static ThemeData darkTheme = ThemeData.dark().copyWith(
       textTheme: TextTheme(
         titleLarge: GoogleFonts.inter(
-          fontSize: 22,
+          fontSize: 26,
           fontWeight: FontWeight.bold,
           color: AppColor.gray,
         ),
         titleMedium: GoogleFonts.inter(
-          fontSize: 20,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColor.gray,
         ),
         titleSmall: GoogleFonts.inter(
-          fontSize: 18,
+          fontSize: 22,
           fontWeight: FontWeight.bold,
           color: AppColor.gray,
         ),
         bodySmall: GoogleFonts.inter(
-          fontSize: 12,
+          fontSize: 13.8,
           color: AppColor.gray,
         ),
         bodyMedium: GoogleFonts.inter(
-          fontSize: 13,
+          fontSize: 15,
           color: AppColor.gray,
         ),
         bodyLarge: GoogleFonts.inter(
-          fontSize: 16,
+          fontSize: 18,
           color: DarkModeColor.textColor,
         ),
       ),

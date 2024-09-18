@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/feature/home/home.dart';
+import 'package:smalltin/feature/ladder/controller/ladder_controller.dart';
 import 'package:smalltin/themes/color.dart';
 import 'package:smalltin/widget/quizbutton.dart';
 
@@ -69,6 +70,7 @@ class _TimeUPState extends State<TimeUP> {
               text: "End Quiz",
               onTap: () {
                 Get.offAll(() => const HomeScreen());
+                Get.put(LadderController()).fetchUsers();
               },
             )
           ],

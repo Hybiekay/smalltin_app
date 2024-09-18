@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smalltin/core/constants/api_string.dart';
 import 'package:smalltin/feature/ladder/controller/ladder_controller.dart';
 import 'package:smalltin/feature/ladder/model/lader_user.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -119,46 +120,49 @@ class LadderState extends State<Ladder> {
                                 children: [
                                   if (ladderController.users.length > 1)
                                     _buildUserAvatar(
-                                      ladderController
-                                          .users[1].userDetails.profile,
-                                      '2nd',
-                                      ladderController
-                                          .users[1].userDetails.username,
-                                      ladderController.users[1].correctAnswers,
-                                      40,
-                                      context,
-                                      ladderController
-                                              .users[1].userDetails.email ==
-                                          userController.userModel!.email,
-                                    ),
+                                        ladderController
+                                            .users[1].userDetails.profile,
+                                        '2nd',
+                                        ladderController
+                                            .users[1].userDetails.username,
+                                        ladderController
+                                            .users[1].correctAnswers,
+                                        40,
+                                        context,
+                                        ladderController
+                                                .users[1].userDetails.email ==
+                                            userController.userModel!.email,
+                                        ladderController.users[1]),
                                   if (ladderController.users.isNotEmpty)
                                     _buildUserAvatar(
-                                      ladderController
-                                          .users[0].userDetails.profile,
-                                      '1st',
-                                      ladderController
-                                          .users[0].userDetails.username,
-                                      ladderController.users[0].correctAnswers,
-                                      60,
-                                      context,
-                                      ladderController
-                                              .users[0].userDetails.email ==
-                                          userController.userModel!.email,
-                                    ),
+                                        ladderController
+                                            .users[0].userDetails.profile,
+                                        '1st',
+                                        ladderController
+                                            .users[0].userDetails.username,
+                                        ladderController
+                                            .users[0].correctAnswers,
+                                        60,
+                                        context,
+                                        ladderController
+                                                .users[0].userDetails.email ==
+                                            userController.userModel!.email,
+                                        ladderController.users[0]),
                                   if (ladderController.users.length > 2)
                                     _buildUserAvatar(
-                                      ladderController
-                                          .users[2].userDetails.profile,
-                                      '3rd',
-                                      ladderController
-                                          .users[2].userDetails.username,
-                                      ladderController.users[2].correctAnswers,
-                                      40,
-                                      context,
-                                      ladderController
-                                              .users[2].userDetails.email ==
-                                          userController.userModel!.email,
-                                    ),
+                                        ladderController
+                                            .users[2].userDetails.profile,
+                                        '3rd',
+                                        ladderController
+                                            .users[2].userDetails.username,
+                                        ladderController
+                                            .users[2].correctAnswers,
+                                        40,
+                                        context,
+                                        ladderController
+                                                .users[2].userDetails.email ==
+                                            userController.userModel!.email,
+                                        ladderController.users[2]),
                                 ],
                               ),
                               const SizedBox(height: 16),
@@ -204,58 +208,63 @@ class LadderState extends State<Ladder> {
     double radius,
     BuildContext context,
     bool isCurrentUser,
+    user,
   ) {
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            CircleAvatar(
-              radius: radius, // Dynamic radius
-              backgroundImage: NetworkImage(profileUrl ?? ""),
-              backgroundColor:
-                  isCurrentUser ? Colors.green.withOpacity(0.2) : null,
-            ),
-            Positioned(
-              bottom: -5,
-              child: Container(
-                padding: const EdgeInsets.all(4.0),
-                decoration: BoxDecoration(
-                  color: Colors.green, // Ladder color
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  rank,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 5),
-        // User's name and correct attempts section with responsive width
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 3 - 20,
-          child: Column(
+    return GestureDetector(
+      onTap: () => showCommentBottomSheet(context, user),
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
             children: [
-              Text(
-                name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isCurrentUser ? Colors.green : null,
-                ),
-                textAlign: TextAlign.center,
+              CircleAvatar(
+                radius: radius, // Dynamic radius
+                backgroundImage:
+                    NetworkImage(ApiString.imageUrl(profileUrl ?? "") ?? ""),
+                backgroundColor:
+                    isCurrentUser ? Colors.green.withOpacity(0.2) : null,
               ),
-              // Correct attempts
-              Text(
-                'Correct Attempts: $correctAttempts',
-                style: const TextStyle(color: Colors.grey),
-                textAlign: TextAlign.center,
+              Positioned(
+                bottom: -5,
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Colors.green, // Ladder color
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    rank,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 5),
+          // User's name and correct attempts section with responsive width
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 3 - 20,
+            child: Column(
+              children: [
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isCurrentUser ? Colors.green : null,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                // Correct attempts
+                Text(
+                  'Correct Attempts: $correctAttempts',
+                  style: const TextStyle(color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

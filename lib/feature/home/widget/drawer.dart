@@ -57,7 +57,7 @@ class DrawerScreen extends StatelessWidget {
                       ),
                       SideButton(
                         icon: AppImages.setting,
-                        title: "Settings",
+                        title: "History",
                         onPressed: () {
                           homecontroller.reset();
                         },

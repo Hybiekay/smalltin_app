@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smalltin/core/constants/api_string.dart';
 import 'package:smalltin/feature/comment/provider/comment_controller.dart';
 import 'package:smalltin/feature/ladder/model/lader_user.dart';
 
@@ -39,8 +40,9 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
           Row(
             children: [
               CircleAvatar(
-                backgroundImage:
-                    NetworkImage(widget.user.userDetails.profile ?? ''),
+                backgroundImage: NetworkImage(
+                    ApiString.imageUrl(widget.user.userDetails.profile ?? "") ??
+                        ''),
                 radius: 20,
               ),
               const SizedBox(width: 15),

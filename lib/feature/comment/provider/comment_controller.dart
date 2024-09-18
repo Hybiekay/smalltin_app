@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart'; // Import GetStorage
 import 'package:http/http.dart' as http;
@@ -32,8 +34,10 @@ class CommentController extends GetxController {
         'Authorization': 'Bearer $token', // Add the token here
       },
     );
+    log(response.statusCode.toString());
+    log(response.body.toString());
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final List<dynamic> commentData = json.decode(response.body);
       comments.value =
           commentData.map((comment) => Comment.fromJson(comment)).toList();

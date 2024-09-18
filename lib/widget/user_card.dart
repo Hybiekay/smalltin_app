@@ -32,7 +32,7 @@ class UserCard extends StatelessWidget {
           style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: GestureDetector(
-          onTap: () => _showCommentBottomSheet(context, user),
+          onTap: () => showCommentBottomSheet(context, user),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -83,6 +83,10 @@ class UserCard extends StatelessWidget {
   }
 
   // Method to format comment count
+
+}
+
+
   String _formatCommentCount(int count) {
     if (count >= 1000) {
       final int kCount = (count / 1000).round();
@@ -92,7 +96,7 @@ class UserCard extends StatelessWidget {
   }
 
   // Method to show the bottom sheet for commenting
-  void _showCommentBottomSheet(BuildContext context, MonthlyStat user) {
+  void showCommentBottomSheet(BuildContext context, MonthlyStat user) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -105,4 +109,3 @@ class UserCard extends StatelessWidget {
       },
     );
   }
-}

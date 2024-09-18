@@ -96,6 +96,8 @@ class QuizController extends GetxController {
 
       update();
     } else if (res.statusCode == 201) {
+      _timer?.cancel();
+      time = 0;
       var data = json.decode(res.body);
       Get.dialog(EndGame(data: data));
     } else if (res.statusCode == 401) {

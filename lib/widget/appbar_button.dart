@@ -35,7 +35,7 @@ class AppBarButton extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
-                .copyWith(fontSize: 10, fontWeight: FontWeight.bold),
+                .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         ],
       ),

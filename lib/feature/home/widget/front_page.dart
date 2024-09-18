@@ -6,6 +6,7 @@ import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/home/controller/home_controller.dart';
+import 'package:smalltin/feature/ladder/model/lader_user.dart';
 import 'package:smalltin/feature/ladder/screen/ladder.dart';
 import 'package:smalltin/feature/questions/screens/question.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -37,12 +38,6 @@ class _FrontPageState extends State<FrontPage> {
   }
 
   @override
-  void didUpdateWidget(covariant FrontPage oldWidget) {
-    userController.refreshUser();
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(builder: (homeController) {
       return AnimatedContainer(
@@ -58,6 +53,16 @@ class _FrontPageState extends State<FrontPage> {
             var firstUser = ladderController.users.isNotEmpty
                 ? ladderController.users[0]
                 : null;
+            MonthlyStat? conrrentMonthlyStat;
+
+            try {
+              conrrentMonthlyStat = ladderController.users
+                  .where((use) =>
+                      use.userDetails.email == ucontroller.userModel?.email)
+                  .first;
+            } catch (e) {
+              conrrentMonthlyStat = null;
+            }
 
             return AppScaffold(
               leadingWidth: 1,
@@ -129,7 +134,7 @@ class _FrontPageState extends State<FrontPage> {
                 const DarkModeSwitch(),
                 AppBarButton(
                   title: "Total Job\$",
-                  subTitle: "${user?.jobs ?? 0} ",
+                  subTitle: "${conrrentMonthlyStat?.monthlyJobs ?? 0} ",
                 )
               ],
               child: RefreshIndicator(
@@ -150,7 +155,7 @@ class _FrontPageState extends State<FrontPage> {
                               Text(
                                   "Total Question Attempt: ${userController.userModel?.totalQuestionAttempt ?? 0}"),
                               Text(
-                                "Total Question Correct: ${userController.userModel?.totalQuestionAttempt ?? 0}",
+                                "Total Question Correct: ${userController.userModel?.totalQuestionCorrect ?? 0}",
                               ),
                               const SizedBox(
                                 height: 20,
@@ -181,11 +186,13 @@ class _FrontPageState extends State<FrontPage> {
                               ),
                               BoxCard(
                                 text: "Total  Q Attempt",
-                                subText: "${user?.totalQuestionAttempt ?? 0}",
+                                subText:
+                                    "${conrrentMonthlyStat?.totalAttempts ?? 0}",
                               ),
                               BoxCard(
                                 text: "Total  Correct",
-                                subText: "${user?.totalQuestionCorrect ?? 0}",
+                                subText:
+                                    "${conrrentMonthlyStat?.correctAnswers ?? 0}",
                               ),
                             ],
                           ),
