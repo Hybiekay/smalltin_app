@@ -66,7 +66,8 @@ class _QuestionState extends State<Question> {
                     ),
                     child: Center(
                       child: Text(
-                        "${quizController.questionModel?.question}",
+                        quizController.questionModel?.question ??
+                            "No question available for your field",
                         textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme

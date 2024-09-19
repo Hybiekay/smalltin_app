@@ -34,7 +34,7 @@ class QuizController extends GetxController {
         timer.cancel();
         _timer?.cancel();
 
-        Get.dialog(TimeUP(data: {}));
+        Get.dialog(const TimeUP(data: {}));
       }
     });
   }

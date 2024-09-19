@@ -37,8 +37,8 @@ class CommentController extends GetxController {
     log(response.statusCode.toString());
     log(response.body.toString());
 
-    if (response.statusCode == 201) {
-      final List<dynamic> commentData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      final List<dynamic> commentData = json.decode(response.body)["comments"];
       comments.value =
           commentData.map((comment) => Comment.fromJson(comment)).toList();
     } else {
@@ -59,13 +59,15 @@ class CommentController extends GetxController {
       },
       body: json.encode({'comment': commentText}),
     );
+    log(response.statusCode.toString());
+    log(response.body.toString());
 
-    if (response.statusCode == 201) {
-      final newComment = Comment.fromJson(json.decode(response.body));
-      comments.add(newComment); // Automatically updates UI since it's an RxList
-    } else {
-      throw Exception('Failed to add comment');
-    }
+    // if (response.statusCode == 201) {
+    //   final newComment = Comment.fromJson(json.decode(response.body));
+    //   comments.add(newComment); // Automatically updates UI since it's an RxList
+    // } else {
+    //   throw Exception('Failed to add comment');
+    // }
   }
 
   // Update an existing comment

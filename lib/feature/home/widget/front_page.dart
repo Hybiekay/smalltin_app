@@ -33,7 +33,7 @@ class _FrontPageState extends State<FrontPage> {
   @override
   void initState() {
     userController.refreshUser();
-    ladderController.realtimeUpdate();
+    ladderController.fetchUsers();
     super.initState();
   }
 
@@ -162,10 +162,8 @@ class _FrontPageState extends State<FrontPage> {
                               ),
                             ],
                           ),
-                          Container(
-                            child: const Text(
-                              '1 Job\$ is 1 Naira',
-                            ),
+                          const Text(
+                            '1 Job\$ is 1 Naira',
                           )
                         ],
                       ),

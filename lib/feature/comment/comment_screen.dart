@@ -41,8 +41,7 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
             children: [
               CircleAvatar(
                 backgroundImage: NetworkImage(
-                    ApiString.imageUrl(widget.user.userDetails.profile ?? "") ??
-                        ''),
+                    ApiString.imageUrl(widget.user.userDetails.profile ?? "")),
                 radius: 20,
               ),
               const SizedBox(width: 15),

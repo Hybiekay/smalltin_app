@@ -220,7 +220,7 @@ class LadderState extends State<Ladder> {
               CircleAvatar(
                 radius: radius, // Dynamic radius
                 backgroundImage:
-                    NetworkImage(ApiString.imageUrl(profileUrl ?? "") ?? ""),
+                    NetworkImage(ApiString.imageUrl(profileUrl ?? "")),
                 backgroundColor:
                     isCurrentUser ? Colors.green.withOpacity(0.2) : null,
               ),
