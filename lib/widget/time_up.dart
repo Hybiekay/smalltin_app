@@ -69,8 +69,9 @@ class _TimeUPState extends State<TimeUP> {
             QuizButton(
               text: "End Quiz",
               onTap: () {
+                Get.put(LadderController()).realtimeUpdate();
                 Get.offAll(() => const HomeScreen());
-                Get.put(LadderController()).fetchUsers();
+                // Get.put(LadderController()).fetchUsers();
               },
             )
           ],

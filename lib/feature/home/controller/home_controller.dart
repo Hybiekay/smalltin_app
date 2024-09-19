@@ -1,29 +1,26 @@
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  double xOffSet = 0;
-  double yOffSet = 0;
-  bool isDrawerOpen = false;
+  var xOffSet = 0.0.obs; // Observable double
+  var yOffSet = 0.0.obs; // Observable double
+  var isDrawerOpen = false.obs; // Observable boolean
 
   void openCloseDrawer() {
-    if (isDrawerOpen) {
-      xOffSet = 0;
-      yOffSet = 0;
-      isDrawerOpen = false;
-      update();
+    if (isDrawerOpen.value) {
+      xOffSet.value = 0;
+      yOffSet.value = 0;
+      isDrawerOpen.value = false;
     } else {
-      xOffSet = 290;
-      yOffSet = 80;
-      isDrawerOpen = true;
-      update();
+      xOffSet.value = 290;
+      yOffSet.value = 80;
+      isDrawerOpen.value = true;
     }
   }
 
-  reset() {
-    xOffSet = 0;
-    yOffSet = 0;
-    isDrawerOpen = false;
-    update();
+  void reset() {
+    xOffSet.value = 0;
+    yOffSet.value = 0;
+    isDrawerOpen.value = false;
   }
 
   @override

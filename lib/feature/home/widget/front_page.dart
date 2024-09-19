@@ -29,22 +29,25 @@ class _FrontPageState extends State<FrontPage> {
   final AuthController authController = Get.put(AuthController());
   final UserController userController = Get.put(UserController());
   final LadderController ladderController = Get.put(LadderController());
+  final HomeController homeController = Get.put(HomeController());
 
   @override
   void initState() {
-    userController.refreshUser();
-    ladderController.fetchUsers();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      userController.refreshUser();
+      ladderController.realtimeUpdate();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeController>(builder: (homeController) {
+    return Obx(() {
       return AnimatedContainer(
         transform: Matrix4.translationValues(
-            homeController.xOffSet, homeController.yOffSet, 0)
-          ..scale(homeController.isDrawerOpen ? 0.87 : 1.00)
-          ..rotateZ(homeController.isDrawerOpen ? -50 : 0),
+            homeController.xOffSet.value, homeController.yOffSet.value, 0)
+          ..scale(homeController.isDrawerOpen.value ? 0.87 : 1.00)
+          ..rotateZ(homeController.isDrawerOpen.value ? -50 : 0),
         duration: const Duration(milliseconds: 300),
         child: GetBuilder<UserController>(builder: (ucontroller) {
           UserModel? user = ucontroller.userModel;
@@ -73,7 +76,7 @@ class _FrontPageState extends State<FrontPage> {
                       onTap: () {
                         homeController.openCloseDrawer();
                       },
-                      child: homeController.isDrawerOpen
+                      child: homeController.isDrawerOpen.value
                           ? Container(
                               decoration: const BoxDecoration(
                                 color: AppColor.pColor,

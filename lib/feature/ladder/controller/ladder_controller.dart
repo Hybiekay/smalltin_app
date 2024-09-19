@@ -27,7 +27,7 @@ class LadderController extends GetxController {
       hasMore.value = true;
     }
 
-    log("Fetching users: Page $currentPage");
+    log("Fetching Ladder: Page $currentPage");
     try {
       var response = await _ladderApi.getUsers(currentPage);
 

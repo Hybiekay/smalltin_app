@@ -15,7 +15,7 @@ import 'package:get_storage/get_storage.dart';
 Future<void> main() async {
   await GetStorage.init();
   Get.put(ThemesController());
-     GoogleFonts.config.allowRuntimeFetching = false; // Disable runtime fetching
+  //sable runtime fetching
 
   runApp(const MyApp());
 }

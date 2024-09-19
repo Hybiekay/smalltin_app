@@ -59,8 +59,9 @@ class CommentController extends GetxController {
       },
       body: json.encode({'comment': commentText}),
     );
-    log(response.statusCode.toString());
+    print(response.body.toString());
     log(response.body.toString());
+    log(response.statusCode.toString());
 
     // if (response.statusCode == 201) {
     //   final newComment = Comment.fromJson(json.decode(response.body));

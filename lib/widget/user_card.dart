@@ -83,29 +83,21 @@ class UserCard extends StatelessWidget {
   }
 
   // Method to format comment count
-
 }
 
-
-  String _formatCommentCount(int count) {
-    if (count >= 1000) {
-      final int kCount = (count / 1000).round();
-      return '$kCount k';
-    }
-    return '$count';
+String _formatCommentCount(int count) {
+  if (count >= 1000) {
+    final int kCount = (count / 1000).round();
+    return '$kCount k';
   }
-
-  // Method to show the bottom sheet for commenting
-  void showCommentBottomSheet(BuildContext context, MonthlyStat user) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height *
-              0.8, // Set height to 80% of screen height
-          child: CommentBottomSheet(user: user),
-        );
-      },
-    );
-  }
+  return '$count';
+}
+void showCommentBottomSheet(BuildContext context, MonthlyStat user) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return CommentBottomSheet(user: user);
+    },
+  );
+}
