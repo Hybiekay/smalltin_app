@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/core/constants/api_string.dart';
-import 'package:smalltin/feature/comment/comment_editor.dart';
 import 'package:smalltin/feature/comment/provider/comment_controller.dart';
 import 'package:smalltin/feature/ladder/model/lader_user.dart';
-
-
+import 'package:smalltin/themes/color.dart';
 
 class CommentBottomSheet extends StatefulWidget {
   final MonthlyStat user;
 
-  const CommentBottomSheet({Key? key, required this.user}) : super(key: key);
+  const CommentBottomSheet({super.key, required this.user});
 
   @override
   CommentBottomSheetState createState() => CommentBottomSheetState();
 }
 
 class CommentBottomSheetState extends State<CommentBottomSheet> {
+  final TextEditingController _commentController = TextEditingController();
   final CommentController commentController = Get.put(CommentController());
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -27,15 +32,12 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.6, // 60% of the screen height
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-      ),
-      child: Padding(
+    return Scaffold(
+      backgroundColor: AppColor.pColor,
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // User header with Avatar
             Row(
@@ -46,7 +48,7 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
                             widget.user.userDetails.profile ?? "")),
                         radius: 20,
                       )
-                    : CircleAvatar(
+                    : const CircleAvatar(
                         radius: 20,
                       ),
                 const SizedBox(width: 15),
@@ -74,6 +76,10 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
             // Comments ListView with GetX reactive state
             Expanded(
               child: Obx(() {
+                // if (commentController.isLoading.value) {
+                //   return const Center(child: CircularProgressIndicator());
+                // }
+
                 return commentController.comments.isNotEmpty
                     ? ListView.builder(
                         itemCount: commentController.comments.length,
@@ -85,20 +91,44 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
                                 'By: ${comment.user.username}'), // Display user info
                             contentPadding:
                                 const EdgeInsets.symmetric(vertical: 4.0),
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => CommentEditorScreen(
-                                    user: widget.user,
-                                  ),
-                                ),
-                              );
-                            },
                           );
                         },
                       )
                     : const Center(child: Text('No comments yet'));
               }),
+            ),
+            const SizedBox(height: 16),
+
+            // Add comment row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _commentController,
+                    minLines: 1,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      hintStyle: Theme.of(context).textTheme.bodyMedium,
+                      hintText: 'Enter your comment here...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    final comment = _commentController.text.trim();
+                    if (comment.isNotEmpty) {
+                      commentController.addComment(widget.user.id, comment);
+                      _commentController.clear(); // Clear input field
+                    }
+                  },
+                  child: const Text('Submit'),
+                ),
+              ],
             ),
           ],
         ),

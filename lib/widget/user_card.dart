@@ -92,12 +92,22 @@ String _formatCommentCount(int count) {
   }
   return '$count';
 }
+
 void showCommentBottomSheet(BuildContext context, MonthlyStat user) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
     builder: (BuildContext context) {
-      return CommentBottomSheet(user: user);
+      return SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.8,
+        child: CommentBottomSheet(user: user),
+      );
     },
   );
 }

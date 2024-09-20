@@ -59,7 +59,6 @@ class CommentController extends GetxController {
       },
       body: json.encode({'comment': commentText}),
     );
-    print(response.body.toString());
     log(response.body.toString());
     log(response.statusCode.toString());
 
