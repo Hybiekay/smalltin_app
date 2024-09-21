@@ -24,6 +24,7 @@ dependencies:
   image_cropper: ^8.0.2
   mime: ^1.0.5
   path: ^1.9.0
+  chat_bubbles: ^1.6.0
  
 
 

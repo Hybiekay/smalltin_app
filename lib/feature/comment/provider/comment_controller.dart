@@ -11,7 +11,6 @@ import '../model/comment.dart';
 class CommentController extends GetxController {
   // Use RxList to make the comments list observable
   RxList<Comment> comments = <Comment>[].obs;
-
   // Initialize GetStorage to retrieve the token
   final box = GetStorage();
   var token;
@@ -62,12 +61,13 @@ class CommentController extends GetxController {
     log(response.body.toString());
     log(response.statusCode.toString());
 
-    // if (response.statusCode == 201) {
-    //   final newComment = Comment.fromJson(json.decode(response.body));
-    //   comments.add(newComment); // Automatically updates UI since it's an RxList
-    // } else {
-    //   throw Exception('Failed to add comment');
-    // }
+    if (response.statusCode == 201) {
+      final newComment = Comment.fromJson(json.decode(response.body)["data"]);
+      comments.insert(
+          0, newComment); // Automatically updates UI since it's an RxList
+    } else {
+      throw Exception('Failed to add comment');
+    }
   }
 
   // Update an existing comment

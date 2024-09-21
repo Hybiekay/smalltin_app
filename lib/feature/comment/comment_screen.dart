@@ -4,6 +4,7 @@ import 'package:smalltin/core/constants/api_string.dart';
 import 'package:smalltin/feature/comment/provider/comment_controller.dart';
 import 'package:smalltin/feature/ladder/model/lader_user.dart';
 import 'package:smalltin/themes/color.dart';
+import 'package:chat_bubbles/chat_bubbles.dart'; // Import the chat_bubbles package
 
 class CommentBottomSheet extends StatefulWidget {
   final MonthlyStat user;
@@ -17,10 +18,12 @@ class CommentBottomSheet extends StatefulWidget {
 class CommentBottomSheetState extends State<CommentBottomSheet> {
   final TextEditingController _commentController = TextEditingController();
   final CommentController commentController = Get.put(CommentController());
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
     _commentController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -28,6 +31,18 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
   void initState() {
     super.initState();
     commentController.fetchComments(widget.user.id); // Fetch comments
+
+    // Scroll to the last comment automatically after data is fetched
+    ever(commentController.comments, (_) {
+      _scrollToBottom();
+    });
+  }
+
+  // Function to scroll to the bottom
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
   }
 
   @override
@@ -73,28 +88,37 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
             ),
             const SizedBox(height: 16),
 
-            // Comments ListView with GetX reactive state
+            // Comments ListView with GetX reactive state and chat bubble design
             Expanded(
               child: Obx(() {
-                // if (commentController.isLoading.value) {
-                //   return const Center(child: CircularProgressIndicator());
-                // }
+                if (commentController.comments.isNotEmpty) {
+                  return ListView.builder(
+                    reverse: true, // This makes the list reverse (latest at the bottom)
+                    controller: _scrollController, // Attach scroll controller
+                    itemCount: commentController.comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = commentController.comments[index];
+                      bool isCurrentUser = comment.user.id == widget.user.id;
 
-                return commentController.comments.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: commentController.comments.length,
-                        itemBuilder: (context, index) {
-                          final comment = commentController.comments[index];
-                          return ListTile(
-                            title: Text(comment.comment),
-                            subtitle: Text(
-                                'By: ${comment.user.username}'), // Display user info
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 4.0),
-                          );
-                        },
-                      )
-                    : const Center(child: Text('No comments yet'));
+                      // Use BubbleSpecial for better chat bubble display
+                      return BubbleSpecialTwo(
+                        text: comment.comment,
+                        isSender: isCurrentUser,
+                        color: isCurrentUser
+                            ? Colors.blue[100]!
+                            : Colors.grey[300]!,
+                        tail: true,
+                        textStyle: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: Colors.black),
+                        seen: true, // Customize this based on the logic
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(child: Text('No comments yet'));
+                }
               }),
             ),
             const SizedBox(height: 16),
@@ -124,6 +148,7 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
                     if (comment.isNotEmpty) {
                       commentController.addComment(widget.user.id, comment);
                       _commentController.clear(); // Clear input field
+                      _scrollToBottom(); // Scroll to the last message after submitting
                     }
                   },
                   child: const Text('Submit'),
