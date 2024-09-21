@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:smalltin/core/constants/api_string.dart';
 import 'dart:convert';
 
+import '../../../controller/user_controller.dart';
 import '../model/comment.dart';
 
 class CommentController extends GetxController {
@@ -14,12 +15,13 @@ class CommentController extends GetxController {
   // Initialize GetStorage to retrieve the token
   final box = GetStorage();
   var token;
-
   @override
   void onInit() {
     super.onInit();
     token = box.read("token"); // Read the token from storage
   }
+
+  final UserController userController = Get.put(UserController());
 
   // Fetch all comments for a specific MonthlyStat
   Future<void> fetchComments(int monthlyStatId) async {
@@ -62,7 +64,15 @@ class CommentController extends GetxController {
     log(response.statusCode.toString());
 
     if (response.statusCode == 201) {
-      final newComment = Comment.fromJson(json.decode(response.body)["data"]);
+      final data = json.decode(response.body)["data"];
+      final newComment = Comment(
+          comment: data["comment"],
+          id: data["id"],
+          createdAt: data['created_at'],
+          user: User(
+              id: userController.userModel?.id ?? 1,
+              username: userController.userModel?.username ?? "user"));
+
       comments.insert(
           0, newComment); // Automatically updates UI since it's an RxList
     } else {

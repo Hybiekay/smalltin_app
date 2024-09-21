@@ -5,6 +5,8 @@ import 'package:smalltin/feature/comment/provider/comment_controller.dart';
 import 'package:smalltin/feature/ladder/model/lader_user.dart';
 import 'package:smalltin/themes/color.dart';
 import 'package:chat_bubbles/chat_bubbles.dart'; // Import the chat_bubbles package
+import 'package:intl/intl.dart'; // For formatting the date and time
+import 'package:timeago/timeago.dart' as timeago; // Import timeago package
 
 class CommentBottomSheet extends StatefulWidget {
   final MonthlyStat user;
@@ -41,8 +43,77 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
   // Function to scroll to the bottom
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
     }
+  }
+
+  // Function to edit comment
+  void _editComment(
+      BuildContext context, int commentId, String initialComment) {
+    TextEditingController _editController =
+        TextEditingController(text: initialComment);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Comment'),
+          content: TextField(
+            controller: _editController,
+            minLines: 1,
+            maxLines: 5,
+            decoration: const InputDecoration(hintText: 'Update your comment'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final updatedComment = _editController.text.trim();
+                if (updatedComment.isNotEmpty) {
+                  commentController.updateComment(commentId, updatedComment);
+                  Navigator.pop(context); // Close dialog
+                }
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Function to show options (Edit/Delete) for the current user
+  void _showEditDeleteOptions(
+      BuildContext context, int commentId, String commentText) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Edit'),
+              onTap: () {
+                Navigator.pop(context); // Close the bottom sheet
+                _editComment(context, commentId, commentText);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: const Text('Delete'),
+              onTap: () {
+                commentController.deleteComment(commentId);
+                Navigator.pop(context); // Close the bottom sheet
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -63,9 +134,7 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
                             widget.user.userDetails.profile ?? "")),
                         radius: 20,
                       )
-                    : const CircleAvatar(
-                        radius: 20,
-                      ),
+                    : const CircleAvatar(radius: 20),
                 const SizedBox(width: 15),
                 Expanded(
                   child: Column(
@@ -93,26 +162,65 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
               child: Obx(() {
                 if (commentController.comments.isNotEmpty) {
                   return ListView.builder(
-                    reverse: true, // This makes the list reverse (latest at the bottom)
+                    reverse: true, // Reverse to show the latest at the bottom
                     controller: _scrollController, // Attach scroll controller
                     itemCount: commentController.comments.length,
                     itemBuilder: (context, index) {
                       final comment = commentController.comments[index];
                       bool isCurrentUser = comment.user.id == widget.user.id;
 
-                      // Use BubbleSpecial for better chat bubble display
-                      return BubbleSpecialTwo(
-                        text: comment.comment,
-                        isSender: isCurrentUser,
-                        color: isCurrentUser
-                            ? Colors.blue[100]!
-                            : Colors.grey[300]!,
-                        tail: true,
-                        textStyle: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: Colors.black),
-                        seen: true, // Customize this based on the logic
+                      // Format the date and time
+                      final String formattedDate =
+                          formatTimestamp(DateTime.parse(comment.createdAt));
+
+                      return GestureDetector(
+                        onLongPress: () {
+                          if (isCurrentUser) {
+                            _showEditDeleteOptions(
+                                context, comment.id, comment.comment);
+                          }
+                        },
+                        child: Column(
+                          crossAxisAlignment: isCurrentUser
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
+                          children: [
+                            BubbleSpecialTwo(
+                              text: comment.comment,
+                              isSender: isCurrentUser,
+                              color: isCurrentUser
+                                  ? Colors.blue[100]!
+                                  : Colors.grey[300]!,
+                              tail: true,
+                              textStyle: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: Colors.black),
+                              seen: true, // Customize this based on the logic
+                            ),
+                            // Display username and timestamp below each comment
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment: isCurrentUser
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
+                                children: [
+                                  Text(comment.user.username,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  const SizedBox(width: 8),
+                                  Text(formattedDate,
+                                      style:
+                                          const TextStyle(color: Colors.grey)),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                                height: 8), // Add space between comments
+                          ],
+                        ),
                       );
                     },
                   );
@@ -160,4 +268,18 @@ class CommentBottomSheetState extends State<CommentBottomSheet> {
       ),
     );
   }
+}
+
+///Function to format the timestamp
+String formatTimestamp(DateTime timestamp) {
+  final now = DateTime.now();
+  final difference = now.difference(timestamp);
+
+  // If the difference is less than 10 days, show "time ago"
+  if (difference.inDays < 10) {
+    return timeago.format(timestamp);
+  }
+
+  // If more than 10 days, show the date without the year
+  return DateFormat('MMM d').format(timestamp); // e.g., "Sep 12"
 }
