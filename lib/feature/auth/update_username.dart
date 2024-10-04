@@ -52,13 +52,15 @@ class _UpdateNameState extends State<UpdateName> {
                     Expanded(
                       child: TextField(
                         onChanged: (v) async {
-                          var value = await authController.updateName(context);
                           if (v.length < 3) {
                             setState(() {
                               correct = false;
                               values = "Name Is less Then the required lenght";
                             });
-                          } else if (value == 'Your username is available.') {
+                            return;
+                          }
+                          var value = await authController.updateName(context);
+                          if (value == 'Your username is available.') {
                             setState(() {
                               correct = true;
                               values = "Your username is available.";
@@ -115,7 +117,7 @@ class _UpdateNameState extends State<UpdateName> {
                                 textAlign: TextAlign.start,
                               )
                             : Text(
-                               values ==''? '':  "$values ❌",
+                                values == '' ? '' : "$values ❌",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!

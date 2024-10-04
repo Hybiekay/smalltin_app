@@ -99,12 +99,18 @@ class QuizController extends GetxController {
       _timer?.cancel();
       time = 0;
       var data = json.decode(res.body);
-      Get.dialog(EndGame(data: data));
+      gameToken = data["token"];
+      Get.dialog(
+          // barrierDismissible: false,
+          EndGame(data: data));
     } else if (res.statusCode == 401) {
       _timer?.cancel();
       time = 0;
       var data = json.decode(res.body);
-      Get.dialog(TimeUP(data: data));
-    }
+      Get.dialog(
+        //  barrierDismissible: false,//
+        TimeUP(data: data),
+      );
+    } else {}
   }
 }

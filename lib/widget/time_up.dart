@@ -35,7 +35,9 @@ class _TimeUPState extends State<TimeUP> {
         child: Column(
           children: [
             Text(
-              "Time Up",
+              widget.data["message"] == "Token expired."
+                  ? 'Time Up'
+                  : "Invalid ", // "Time Up",
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: AppColor.white,
                     fontSize: 24,
@@ -46,7 +48,9 @@ class _TimeUPState extends State<TimeUP> {
               height: 20,
             ),
             Text(
-              "You haven't earned anything because you didn't keep to the time.",
+              widget.data["message"] == "Token expired."
+                  ? "You haven't earned anything because you didn't keep to the time."
+                  : widget.data["message"],
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme

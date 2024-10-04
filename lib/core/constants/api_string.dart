@@ -20,5 +20,5 @@ class ApiString {
     return "https://smalltin.com/storage/$url";
   }
 
-  static const String apiquiss = "8d08056b-bc4f-453d-93e4-cccead7fdb75";
+  static const String apiquiss = "8d08056b-bc4f-453d-93e4-cccead7fdb75jTpkV02g";
 }
