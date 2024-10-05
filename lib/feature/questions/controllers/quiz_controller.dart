@@ -100,15 +100,13 @@ class QuizController extends GetxController {
       time = 0;
       var data = json.decode(res.body);
       gameToken = data["token"];
-      Get.dialog(
-          // barrierDismissible: false,
-          EndGame(data: data));
+      Get.dialog(barrierDismissible: false, EndGame(data: data));
     } else if (res.statusCode == 401) {
       _timer?.cancel();
       time = 0;
       var data = json.decode(res.body);
       Get.dialog(
-        //  barrierDismissible: false,//
+        barrierDismissible: false, //
         TimeUP(data: data),
       );
     } else {}
