@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smalltin/core/constants/app_images.dart';
 
 import '../themes/color.dart';
@@ -17,8 +16,8 @@ class NextButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 60.w,
-        height: 30.h,
+        width: 60,
+        height: 30,
         margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           color: AppColor.white,

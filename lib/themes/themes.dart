@@ -8,17 +8,17 @@ class AppThemes {
       canvasColor: AppColor.scaffoldBg,
       textTheme: TextTheme(
         titleLarge: GoogleFonts.inter(
-          fontSize: 26,
+          fontSize: 25,
           fontWeight: FontWeight.bold,
           color: LightModeColor.textColor,
         ),
         titleMedium: GoogleFonts.inter(
-          fontSize: 24,
+          fontSize: 23,
           fontWeight: FontWeight.bold,
           color: LightModeColor.textColor,
         ),
         titleSmall: GoogleFonts.inter(
-          fontSize: 22,
+          fontSize: 21,
           fontWeight: FontWeight.bold,
           color: LightModeColor.textColor,
         ),
@@ -31,7 +31,7 @@ class AppThemes {
           color: LightModeColor.textColor,
         ),
         bodyLarge: GoogleFonts.inter(
-          fontSize: 18,
+          fontSize: 17,
           color: LightModeColor.textColor,
         ),
       ),
@@ -56,17 +56,17 @@ class AppThemes {
   static ThemeData darkTheme = ThemeData.dark().copyWith(
       textTheme: TextTheme(
         titleLarge: GoogleFonts.inter(
-          fontSize: 26,
+          fontSize: 25,
           fontWeight: FontWeight.bold,
           color: AppColor.gray,
         ),
         titleMedium: GoogleFonts.inter(
-          fontSize: 24,
+          fontSize: 23,
           fontWeight: FontWeight.bold,
           color: AppColor.gray,
         ),
         titleSmall: GoogleFonts.inter(
-          fontSize: 22,
+          fontSize: 21,
           fontWeight: FontWeight.bold,
           color: AppColor.gray,
         ),
@@ -79,7 +79,7 @@ class AppThemes {
           color: AppColor.gray,
         ),
         bodyLarge: GoogleFonts.inter(
-          fontSize: 18,
+          fontSize: 17,
           color: DarkModeColor.textColor,
         ),
       ),

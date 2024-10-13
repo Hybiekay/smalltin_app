@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smalltin/themes/color.dart';
 
 class QuizButton extends StatelessWidget {
@@ -18,7 +16,7 @@ class QuizButton extends StatelessWidget {
           color: AppColor.gray,
           borderRadius: BorderRadius.circular(10),
         ),
-        height: 35.h,
+        height: 35,
         width: double.infinity,
         child: Center(
           child: Text(

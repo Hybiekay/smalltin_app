@@ -52,7 +52,7 @@ class CommentBottomViewState extends State<CommentBottomView> {
   // Function to edit comment
   void _editComment(
       BuildContext context, int commentId, String initialComment) {
-    TextEditingController _editController =
+    TextEditingController editController =
         TextEditingController(text: initialComment);
     showDialog(
       context: context,
@@ -60,7 +60,7 @@ class CommentBottomViewState extends State<CommentBottomView> {
         return AlertDialog(
           title: const Text('Edit Comment'),
           content: TextField(
-            controller: _editController,
+            controller: editController,
             minLines: 1,
             maxLines: 5,
             decoration: const InputDecoration(hintText: 'Update your comment'),
@@ -74,7 +74,7 @@ class CommentBottomViewState extends State<CommentBottomView> {
             ),
             ElevatedButton(
               onPressed: () {
-                final updatedComment = _editController.text.trim();
+                final updatedComment = editController.text.trim();
                 if (updatedComment.isNotEmpty) {
                   commentController.updateComment(commentId, updatedComment);
                   Navigator.pop(context); // Close dialog

@@ -113,10 +113,9 @@ class SideButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: SizedBox(
-        height: 50,
+        height: 40,
         child: Row(
           children: [
-            const SizedBox(width: 20),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -126,16 +125,16 @@ class SideButton extends StatelessWidget {
               child: ImageWidget(
                 imagePath: icon,
                 color: Theme.of(context).primaryColor,
-                width: 20,
+                width: 15,
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 10),
             Text(
               title,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w900, fontSize: 20),
+                  ?.copyWith(fontWeight: FontWeight.w900, fontSize: 15),
             ),
           ],
         ),

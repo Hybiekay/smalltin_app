@@ -10,11 +10,9 @@ import '../../../controller/user_controller.dart';
 import '../model/comment.dart';
 
 class CommentController extends GetxController {
-  // Use RxList to make the comments list observable
   RxList<Comment> comments = <Comment>[].obs;
-  // Initialize GetStorage to retrieve the token
   final box = GetStorage();
-  var token;
+  dynamic token;
   @override
   void onInit() {
     super.onInit();
@@ -23,11 +21,9 @@ class CommentController extends GetxController {
 
   final UserController userController = Get.put(UserController());
 
-  // Fetch all comments for a specific MonthlyStat
   Future<void> fetchComments(int monthlyStatId) async {
     final url = ApiString.endPoint('monthly-stats/$monthlyStatId/comments');
 
-    // Add Authorization header
     final response = await http.get(
       url,
       headers: {

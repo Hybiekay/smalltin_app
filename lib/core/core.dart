@@ -61,3 +61,11 @@ Future<File?> pickProfileImage(ImageSource source) async {
   }
   return null;
 }
+
+//  extention BoxConstraintss on  BoxConstraints {}
+
+extension ResponsiveCheck on BoxConstraints {
+  bool get isLargeScreen => maxWidth >= 600;
+  bool get isMediemScreen => maxWidth >= 360;
+  bool get isPhoneScreen => maxWidth <= 360;
+}
