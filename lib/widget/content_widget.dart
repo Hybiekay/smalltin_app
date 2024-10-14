@@ -27,7 +27,7 @@ class ContentWidget extends StatelessWidget {
                 ? SizedBox(
                     height: 60.h,
                   )
-                : Container(),
+                : SizedBox(height: 20),
             Image.asset(
               getLogo(context),
               height: snapshot.isLargeScreen ? 250.h : null,

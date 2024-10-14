@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smalltin/core/constants/api_string.dart';
+import 'package:smalltin/core/core.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:smalltin/apis/chat.dart';
 import 'package:smalltin/model/user_model.dart';
@@ -14,6 +16,8 @@ class ChatController extends GetxController {
   final ScrollController scrollController =
       ScrollController(keepScrollOffset: true);
   String? typingUser;
+  String tokenKey = "5f67d9a2c8e3f6b1d4e7g8h2i3j4k5l6";
+  String userKey = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
   final UserModel? user = Get.put(UserController()).userModel;
   ChatApi chatApi = ChatApi();
   final box = GetStorage();
@@ -30,8 +34,7 @@ class ChatController extends GetxController {
   void onInit() {
     super.onInit();
     messageController.addListener(_onMessageChanged);
-    var token = box.read("token");
-    log('Token fetched: $token');
+    var token = decryptData(box.read("token"), tokenKey);
 
     _connectSocket();
     socket.connect();
@@ -144,7 +147,8 @@ class ChatController extends GetxController {
 
   sendMessageToAdmin(String message) async {
     try {
-      var ff = box.read("user");
+      var ff = decryptData(box.read("user"), userKey);
+
       if (ff != null) {
         var sentMessage = await chatApi.sendMessage(message: message);
         if (sentMessage != null) {

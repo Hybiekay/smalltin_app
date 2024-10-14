@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smalltin/apis/auth.dart';
 import 'package:smalltin/core/constants/dialog.dart';
+import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/auth/password_screen.dart';
 import 'package:smalltin/feature/auth/sign_in.dart';
 import 'package:smalltin/feature/auth/update_username.dart';
@@ -18,6 +19,9 @@ import '../update_password.dart';
 
 class AuthController extends GetxController {
   final box = GetStorage();
+  String tokenKey = "5f67d9a2c8e3f6b1d4e7g8h2i3j4k5l6";
+  String userKey = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
+
   bool isBusy = false;
   TextEditingController emailEditingController = TextEditingController();
   TextEditingController otpEditingController = TextEditingController();
@@ -29,18 +33,16 @@ class AuthController extends GetxController {
 
   final AuthService _authService = AuthService();
 
-
-@override
+  @override
   void onClose() {
-   emailEditingController.dispose();
-   otpEditingController.dispose();
-   passwordEditingController.dispose();
-   passEditingController.dispose();
-   nameEditingController.dispose();
-   confrimPasswordEditingController.dispose();
+    emailEditingController.dispose();
+    otpEditingController.dispose();
+    passwordEditingController.dispose();
+    passEditingController.dispose();
+    nameEditingController.dispose();
+    confrimPasswordEditingController.dispose();
     super.onClose();
   }
-
 
   checkUSer(BuildContext context) async {
     if (emailEditingController.text.isEmail) {
@@ -100,7 +102,10 @@ class AuthController extends GetxController {
 
       if (res != null) {
         var data = jsonDecode(res.body);
-        box.write('token', data["token"]);
+
+        String enc = encryptData(data["token"].toString(), tokenKey);
+
+        box.write('token', enc);
         if (res.statusCode == 200) {
           Get.to(() => const HomeScreen());
         } else if (res.statusCode == 203 &&
@@ -152,7 +157,7 @@ class AuthController extends GetxController {
       if (res != null) {
         var data = jsonDecode(res.body);
         if (res.statusCode == 200) {
-          box.write('token', data["token"]);
+          box.write('token', encryptData(data["token"].toString(), tokenKey));
           Get.to(() => const CreatePassword());
         } else {
           AppDailog.error(
@@ -182,7 +187,7 @@ class AuthController extends GetxController {
   }
 
   updateMainPassword(BuildContext context) async {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
     if (passwordEditingController.text !=
         confrimPasswordEditingController.text) {
       AppDailog.error(
@@ -260,7 +265,7 @@ class AuthController extends GetxController {
   }
 
   updateName(BuildContext context) async {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
 
     isBusy = true;
     update();
@@ -279,7 +284,7 @@ class AuthController extends GetxController {
   }
 
   updateBio(BuildContext context, String bio) async {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
 
     var res = await _authService.updateBio(bio.trim(), token);
 
@@ -297,7 +302,7 @@ class AuthController extends GetxController {
     required BuildContext context,
     required List<int> field,
   }) async {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
     isBusy = true;
     update();
     var res = await _authService.updateFields(field, token);
@@ -322,7 +327,7 @@ class AuthController extends GetxController {
 
   updateSubFields(
       {required BuildContext context, required List<int> subFields}) async {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
     isBusy = true;
     update();
     var res = await _authService.updateSubFields(subFields, token);
@@ -368,7 +373,8 @@ class AuthController extends GetxController {
   }
 
   getUser() async {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
+
     isBusy = true;
     update();
     var res = await _authService.getuser(token);
@@ -378,7 +384,8 @@ class AuthController extends GetxController {
   }
 
   logout() async {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
+
     isBusy = true;
     update();
     await _authService.logout(token);
@@ -390,7 +397,7 @@ class AuthController extends GetxController {
   }
 
   uploadImage(File image) {
-    var token = box.read("token");
+    var token = decryptData(box.read("token"), tokenKey);
     _authService.uploadProfileImage(image, token);
   }
 }

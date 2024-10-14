@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart'; // Import GetStorage
 import 'package:http/http.dart' as http;
 import 'package:smalltin/core/constants/api_string.dart';
+import 'package:smalltin/core/core.dart';
 import 'dart:convert';
 
 import '../../../controller/user_controller.dart';
@@ -12,11 +13,12 @@ import '../model/comment.dart';
 class CommentController extends GetxController {
   RxList<Comment> comments = <Comment>[].obs;
   final box = GetStorage();
+  String tokenKey = "5f67d9a2c8e3f6b1d4e7g8h2i3j4k5l6";
   dynamic token;
   @override
   void onInit() {
     super.onInit();
-    token = box.read("token"); // Read the token from storage
+    token = decryptData(box.read("token"), tokenKey);
   }
 
   final UserController userController = Get.put(UserController());

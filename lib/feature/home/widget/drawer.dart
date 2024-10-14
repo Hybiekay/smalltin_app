@@ -22,7 +22,8 @@ class DrawerScreen extends StatelessWidget {
         body: authControler.isBusy
             ? const Loading()
             : Center(
-                child: SizedBox(
+                child: Container(
+                  padding: EdgeInsets.only(left: 10),
                   width: MediaQuery.sizeOf(context).width,
                   height: MediaQuery.sizeOf(context).height,
                   child: Column(
@@ -134,7 +135,7 @@ class SideButton extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w900, fontSize: 15),
+                  ?.copyWith(fontWeight: FontWeight.w900, fontSize: 16),
             ),
           ],
         ),

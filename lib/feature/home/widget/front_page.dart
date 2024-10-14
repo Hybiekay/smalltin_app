@@ -252,7 +252,7 @@ class RealTimeLedderBoard extends StatelessWidget {
               itemBuilder: (context, index) {
                 var ladderUser = ladderController.users[index];
                 bool isCurrent = ladderUser.userDetails.email ==
-                    userController.userModel!.email;
+                    userController.userModel?.email;
                 return UserCard(
                   user: ladderUser,
                   isCurrentUser: isCurrent,
