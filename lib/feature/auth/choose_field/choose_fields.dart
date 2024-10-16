@@ -31,8 +31,8 @@ class _ChooseFieldState extends State<ChooseField> {
         ),
         appbarActions: [
           NextButton(onTap: () {
-            if (selectedfields.isEmpty || selectedfields.length < 2) {
-              Get.snackbar("Field is Required", "Select At least 2",
+            if (selectedfields.isEmpty || selectedfields.length < 6) {
+              Get.snackbar("Field is Required", "Select At least 6",
                   snackPosition: SnackPosition.BOTTOM,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor);
             } else {

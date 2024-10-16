@@ -20,7 +20,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: LayoutBuilder(builder: (context, snapshot) {
+      child: LayoutBuilder(builder: (contexts, snapshot) {
         return GetBuilder<AuthController>(builder: (authController) {
           return authController.isBusy
               ? const Loading()

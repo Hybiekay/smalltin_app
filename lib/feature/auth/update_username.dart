@@ -21,7 +21,7 @@ class _UpdateNameState extends State<UpdateName> {
   Widget build(BuildContext context) {
     return AppScaffold(
       child: GetBuilder<AuthController>(builder: (authController) {
-        return LayoutBuilder(builder: (context, snapshot) {
+        return LayoutBuilder(builder: (contexts, snapshot) {
           return snapshot.isLargeScreen
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

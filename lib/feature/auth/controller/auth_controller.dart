@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:smalltin/apis/auth.dart';
 import 'package:smalltin/core/constants/dialog.dart';
 import 'package:smalltin/core/core.dart';
+import 'package:smalltin/themes/color.dart';
 
 class AuthController extends GetxController {
   final box = GetStorage();
@@ -85,7 +86,14 @@ class AuthController extends GetxController {
               });
         }
       }
-    } else {}
+    } else {
+      Get.snackbar(
+        "Invalid Email",
+        "Input valid email",
+        backgroundColor: AppColor.scaffoldBg,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   login(BuildContext context) async {
@@ -105,9 +113,7 @@ class AuthController extends GetxController {
 
         box.write('token', enc);
         if (res.statusCode == 200) {
-          Get.offAllNamed(
-            '/',
-          );
+          Get.offAllNamed('/home');
         } else if (res.statusCode == 203 &&
             data["message"] == "Username is not set.") {
           Get.offNamed(
@@ -352,9 +358,7 @@ class AuthController extends GetxController {
         AppDailog.error(
             title: data["message"],
             onPressed: () {
-              Get.offAllNamed(
-                "/",
-              );
+              Get.offAllNamed("/home");
             },
             context: context,
             buttonText: "Let's go",
@@ -401,18 +405,16 @@ class AuthController extends GetxController {
   }
 
   logout() async {
-    var token = decryptData(box.read("token"), tokenKey);
-
+    Get.offNamed("/auth/sign-in");
+    var best = box.read("token");
+    var token = decryptData(best, tokenKey);
     isBusy = true;
     update();
     await _authService.logout(token);
     box.remove("token");
+    box.erase();
     isBusy = false;
     update();
-
-    Get.offAllNamed(
-      "/auth/sign-in",
-    );
   }
 
   uploadImage(File image) {

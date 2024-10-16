@@ -17,24 +17,25 @@ class Question extends StatefulWidget {
 
 class _QuestionState extends State<Question> {
   final QuizController controller = Get.put(QuizController());
-  final RewardedAdManager _rewardedAdManager = RewardedAdManager();
+
+  /// final RewardedAdManager _rewardedAdManager = RewardedAdManager();
   bool _isAdWatched = false;
   @override
   void initState() {
     controller.startQuiz();
-    _rewardedAdManager.loadRewardedAd();
+    //  _rewardedAdManager.loadRewardedAd();
     _attemptQuiz();
     super.initState();
   }
 
   void _attemptQuiz() {
     if (!_isAdWatched) {
-      _rewardedAdManager.showRewardedAd(() {
-        // User watched the ad, now allow them to answer questions
-        setState(() {
-          _isAdWatched = true;
-        });
-      });
+      // _rewardedAdManager.showRewardedAd(() {
+      //   // User watched the ad, now allow them to answer questions
+      //   setState(() {
+      //     _isAdWatched = true;
+      //   });
+      // });
     } else {
       // Proceed with the quiz logic
       // You can allow users to answer the questions now.

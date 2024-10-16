@@ -18,7 +18,8 @@ import 'package:smalltin/feature/widget/loading_widget.dart';
 
 class AppRoutes {
   static final routes = [
-    GetPage(name: '/', page: () => const HomeScreen()),
+    GetPage(name: '/home', page: () => const HomeScreen()),
+    GetPage(name: '/', page: () => const SignInScreen()),
     GetPage(name: '/contact-us', page: () => const ContactUs()),
     GetPage(name: '/auth/sign-in', page: () => const SignInScreen()),
     GetPage(name: '/auth/login', page: () => const PasswordScreen()),

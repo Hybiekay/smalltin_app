@@ -22,7 +22,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
       child: GetBuilder<AuthController>(builder: (controller) {
         return controller.isBusy
             ? const Loading()
-            : LayoutBuilder(builder: (context, snapshot) {
+            : LayoutBuilder(builder: (contexts, snapshot) {
                 return snapshot.isLargeScreen
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

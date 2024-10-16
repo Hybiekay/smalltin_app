@@ -78,7 +78,7 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
       child: GetBuilder<AuthController>(builder: (authController) {
         return authController.isBusy
             ? const Loading()
-            : LayoutBuilder(builder: (context, snapshot) {
+            : LayoutBuilder(builder: (contexts, snapshot) {
                 return snapshot.isLargeScreen
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

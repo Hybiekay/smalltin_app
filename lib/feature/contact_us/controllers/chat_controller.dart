@@ -51,8 +51,7 @@ class ChatController extends GetxController {
     if (messageController.text.isEmpty) {
       stopTyping();
     } else {
-      // You can add a debounce here to detect inactivity (e.g., user stopped typing)
-      // Debounce duration example:
+     
       debounce(messageController.text.obs, (_) {
         stopTyping();
       }, time: const Duration(seconds: 1));

@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:smalltin/feature/auth/choose_field/controller/field_controller.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/themes/controller/theme_control.dart';
@@ -35,6 +34,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppThemes.darkTheme,
           debugShowCheckedModeBanner: false,
           themeMode: Get.find<ThemesController>().themeData(),
+          initialRoute: '/splash',
           getPages: AppRoutes.routes,
           // onInit: () {
           //   final token = Get.find<AuthController>().box.read("token");
