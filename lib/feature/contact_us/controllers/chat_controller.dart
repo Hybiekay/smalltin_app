@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -149,11 +148,9 @@ class ChatController extends GetxController {
     try {
       var ff = decryptData(box.read("user"), userKey);
 
-      if (ff != null) {
-        var sentMessage = await chatApi.sendMessage(message: message);
-        if (sentMessage != null) {
-          // Assuming sentMessage is a Map<String, dynamic>
-        }
+      var sentMessage = await chatApi.sendMessage(message: message);
+      if (sentMessage != null) {
+        // Assuming sentMessage is a Map<String, dynamic>
       }
     } catch (e) {
       debugPrint("Error sending message: $e");

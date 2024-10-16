@@ -4,16 +4,10 @@ import 'package:smalltin/controller/user_controller.dart';
 import 'package:smalltin/core/constants/api_string.dart';
 import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/core/core.dart';
-import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
-import 'package:smalltin/feature/contact_us/screens/contact_us.dart';
-import 'package:smalltin/feature/edit_profile/screen/edit_profile.dart';
-import 'package:smalltin/feature/history/screen/history.dart';
 import 'package:smalltin/feature/home/controller/home_controller.dart';
 import 'package:smalltin/feature/home/widget/drawer.dart';
 import 'package:smalltin/feature/ladder/model/lader_user.dart';
-import 'package:smalltin/feature/ladder/screen/ladder.dart';
-import 'package:smalltin/feature/questions/screens/question.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
 import 'package:smalltin/feature/widget/dark_mode_switch.dart';
 import 'package:smalltin/model/user_model.dart';
@@ -231,7 +225,9 @@ class RealTimeLedderBoard extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Get.to(() => const Ladder());
+                Get.toNamed(
+                  '/ladder-board',
+                );
               },
               child: Text(
                 "View All",
@@ -282,6 +278,8 @@ class FontCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.put(AuthController());
+
     return Column(
       children: [
         Row(
@@ -318,7 +316,9 @@ class FontCard extends StatelessWidget {
               BoxCard(
                 text: "Attempt",
                 onTap: () {
-                  Get.to(() => const Question());
+                  Get.toNamed(
+                    '/attempt-question',
+                  );
                 },
                 isButton: true,
               ),
@@ -429,7 +429,9 @@ class FontCard extends StatelessWidget {
                   CardButton(
                     text: "Edit Fields",
                     onTap: () {
-                      Get.to(() => const ChooseField());
+                      Get.toNamed(
+                        '/choose-fields',
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -437,14 +439,16 @@ class FontCard extends StatelessWidget {
                     text: "View All",
                     isTop: true,
                     onTap: () {
-                      Get.to(() => const Ladder());
+                      Get.toNamed(
+                        '/ladder-board',
+                      );
                     },
                   ),
                   const SizedBox(height: 13),
                   ViewButton(
                     text: "View In Position",
                     onTap: () {
-                      Get.to(() => const Ladder());
+                      Get.toNamed('/ladder-board');
                     },
                   ),
                 ],
@@ -466,9 +470,11 @@ class FontCard extends StatelessWidget {
                   children: [
                     SideButton(
                       icon: AppImages.dashboard,
-                      title: "Edit Profile",
+                      title: "/Edit Profile",
                       onPressed: () {
-                        Get.to(() => const EditProfile());
+                        Get.toNamed(
+                          '/edit-profile',
+                        );
                         // homecontroller.reset();
                       },
                     ),
@@ -476,7 +482,9 @@ class FontCard extends StatelessWidget {
                       icon: AppImages.message,
                       title: "Edit Fields",
                       onPressed: () {
-                        Get.to(() => const ChooseField());
+                        Get.toNamed(
+                          '/choose-fields',
+                        );
                         // homecontroller.reset();
                       },
                     ),
@@ -484,7 +492,9 @@ class FontCard extends StatelessWidget {
                       icon: AppImages.call,
                       title: "Contact US",
                       onPressed: () {
-                        Get.to(() => const ContactUs());
+                        Get.toNamed(
+                          '/contact-us',
+                        );
                         // homecontroller.reset();
                       },
                     ),
@@ -492,14 +502,18 @@ class FontCard extends StatelessWidget {
                       icon: AppImages.setting,
                       title: "History",
                       onPressed: () {
-                        Get.to(() => const HistoryStat());
+                        Get.toNamed(
+                          '/history',
+                        );
                         // homecontroller.reset();
                       },
                     ),
                     SideButton(
                       icon: AppImages.logOut,
                       title: "Log Out",
-                      onPressed: () {},
+                      onPressed: () {
+                        authController.logout();
+                      },
                     ),
                   ],
                 ),

@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:smalltin/feature/auth/controller/auth_controller.dart';
 import 'package:smalltin/feature/auth/sign_in.dart';
 
-import 'package:smalltin/feature/home/home.dart';
-import 'package:smalltin/feature/onboarding/screens/onboarding_screen.dart';
 
 class SplashController extends GetxController {
   bool? isOnboarded;
@@ -13,15 +12,13 @@ class SplashController extends GetxController {
   void onInit() {
     Future.delayed(const Duration(seconds: 5), () {
       isOnboarded = GetStorage().read("isOnboard");
+      final token = Get.find<AuthController>().box.read("token");
+      final onBoarded = Get.find<AuthController>().box.read("onBoarded");
 
-      if (isOnboarded == true && isLoggedIn == null) {
-        Get.to(() => const SignInScreen());
-      } else if (isOnboarded == true && isLoggedIn == false) {
-        Get.to(() => const SignInScreen());
-      } else if (isOnboarded == true && isLoggedIn == true) {
-        Get.to(() => const HomeScreen());
+      if (token == null) {
+        Get.offNamed(onBoarded != null ? '/sign-in' : '/onboarding');
       } else {
-        Get.to(() => const OnboardingScreen());
+        Get.offNamed('/home');
       }
     });
     super.onInit();

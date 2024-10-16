@@ -1,6 +1,6 @@
 {
-    "name": "smalltin",
-    "short_name": "smalltin",
+    "name": "smalltin_app",
+    "short_name": "smalltin_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

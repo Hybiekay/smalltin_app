@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/core/constants/app_images.dart';
 import 'package:smalltin/feature/auth/controller/auth_controller.dart';
-import 'package:smalltin/feature/contact_us/screens/contact_us.dart';
-import 'package:smalltin/feature/edit_profile/screen/edit_profile.dart';
-import 'package:smalltin/feature/history/screen/history.dart';
 import 'package:smalltin/feature/home/controller/home_controller.dart';
 import 'package:smalltin/feature/widget/loading_widget.dart';
 import 'package:smalltin/widget/image_widget.dart';
-import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
 
 class DrawerScreen extends StatelessWidget {
   final HomeController homecontroller = Get.find<HomeController>();
@@ -37,7 +33,7 @@ class DrawerScreen extends StatelessWidget {
                         icon: AppImages.dashboard,
                         title: "Edit Profile",
                         onPressed: () {
-                          Get.to(() => const EditProfile());
+                          Get.toNamed("/edit-profile");
                           homecontroller.reset();
                         },
                       ),
@@ -45,7 +41,7 @@ class DrawerScreen extends StatelessWidget {
                         icon: AppImages.message,
                         title: "Edit Fields",
                         onPressed: () {
-                          Get.to(() => const ChooseField());
+                          Get.toNamed("/choose-fields");
                           homecontroller.reset();
                         },
                       ),
@@ -53,7 +49,7 @@ class DrawerScreen extends StatelessWidget {
                         icon: AppImages.call,
                         title: "Contact US",
                         onPressed: () {
-                          Get.to(() => const ContactUs());
+                          Get.toNamed("contact-us");
                           homecontroller.reset();
                         },
                       ),
@@ -61,7 +57,7 @@ class DrawerScreen extends StatelessWidget {
                         icon: AppImages.setting,
                         title: "History",
                         onPressed: () {
-                          Get.to(() => const HistoryStat());
+                          Get.toNamed("/history");
                           homecontroller.reset();
                         },
                       ),

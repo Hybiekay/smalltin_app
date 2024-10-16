@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smalltin/ads/reward_ads_manager.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/questions/controllers/quiz_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -16,12 +17,28 @@ class Question extends StatefulWidget {
 
 class _QuestionState extends State<Question> {
   final QuizController controller = Get.put(QuizController());
-  bool? answer;
-
+  final RewardedAdManager _rewardedAdManager = RewardedAdManager();
+  bool _isAdWatched = false;
   @override
   void initState() {
     controller.startQuiz();
+    _rewardedAdManager.loadRewardedAd();
+    _attemptQuiz();
     super.initState();
+  }
+
+  void _attemptQuiz() {
+    if (!_isAdWatched) {
+      _rewardedAdManager.showRewardedAd(() {
+        // User watched the ad, now allow them to answer questions
+        setState(() {
+          _isAdWatched = true;
+        });
+      });
+    } else {
+      // Proceed with the quiz logic
+      // You can allow users to answer the questions now.
+    }
   }
 
   @override
@@ -47,111 +64,115 @@ class _QuestionState extends State<Question> {
               )
             ],
           ),
-          appbarActions: const [
-            // AppBarButton(
-            //   title: "Total Job\$",
-            //   subTitle: "500\$",
-            // )
-          ],
-          child: quizController.isBusy
-              ? const Loading()
-              : snapshot.isLargeScreen
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: snapshot.isLargeScreen ? 320 : 350,
-                          width: MediaQuery.sizeOf(context).width * 0.4,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColor.gray.withOpacity(0.3),
-                          ),
-                          child: Center(
-                            child: Text(
-                              quizController.questionModel?.question ??
-                                  "No question available for your field",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontSize: 15),
+          appbarActions: const [],
+          child: !_isAdWatched
+              ? Container(
+                  child: Center(
+                    child: Text("Check Your Internet"),
+                  ),
+                )
+              : quizController.isBusy
+                  ? const Loading()
+                  : snapshot.isLargeScreen
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 320,
+                              width: MediaQuery.sizeOf(context).width * 0.4,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: AppColor.gray.withOpacity(0.3),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  quizController.questionModel?.question ??
+                                      "No question available for your field",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(fontSize: 15),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.sizeOf(context).width * 0.4,
-                          height: snapshot.isLargeScreen ? 320 : 350,
-                          child: Expanded(
-                            child: ListView.builder(
-                              itemCount: quizController.option.length,
-                              itemBuilder: (context, index) {
-                                Map opt = quizController.option[index];
-                                return OptionCard(
-                                  opt: opt,
-                                  onTap: () {
-                                    quizController.answerQuestion(
-                                      answer: opt.keys.first
-                                          .toString()
-                                          .toLowerCase(),
-                                    );
-                                  },
-                                );
-                              },
+                            // Remove Expanded here
+                            Container(
+                              alignment: Alignment.center,
+                              width: MediaQuery.sizeOf(context).width * 0.4,
+                              height: 320,
+                              child: ListView.builder(
+                                itemCount: quizController.option.length,
+                                itemBuilder: (context, index) {
+                                  Map opt = quizController.option[index];
+                                  return OptionCard(
+                                    opt: opt,
+                                    onTap: () {
+                                      quizController.answerQuestion(
+                                        answer: opt.keys.first
+                                            .toString()
+                                            .toLowerCase(),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                          ),
+                          ],
                         )
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        const SizedBox(height: 25),
-                        Container(
-                          height: 320,
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColor.gray.withOpacity(0.3),
-                          ),
-                          child: Center(
-                            child: Text(
-                              quizController.questionModel?.question ??
-                                  "No question available for your field",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontSize: 15),
+                      : Column(
+                          children: [
+                            const SizedBox(height: 25),
+                            Container(
+                              height: 320,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: AppColor.gray.withOpacity(0.3),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  quizController.questionModel?.question ??
+                                      "No question available for your field",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(fontSize: 15),
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 20),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: quizController.option.length,
+                                itemBuilder: (context, index) {
+                                  Map opt = quizController.option[index];
+                                  return OptionCard(
+                                    opt: opt,
+                                    onTap: () {
+                                      quizController.answerQuestion(
+                                        answer: opt.keys.first
+                                            .toString()
+                                            .toLowerCase(),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        Expanded(
-                            child: ListView.builder(
-                          itemCount: quizController.option.length,
-                          itemBuilder: (context, index) {
-                            Map opt = quizController.option[index];
-                            return OptionCard(
-                              opt: opt,
-                              onTap: () {
-                                quizController.answerQuestion(
-                                  answer:
-                                      opt.keys.first.toString().toLowerCase(),
-                                );
-                              },
-                            );
-                          },
-                        ))
-                      ],
-                    ),
         );
       });
     });
   }
 }
+
+// OptionCard remains unchanged
 
 class OptionCard extends StatefulWidget {
   const OptionCard({

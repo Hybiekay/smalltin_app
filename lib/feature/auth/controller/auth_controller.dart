@@ -8,14 +8,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:smalltin/apis/auth.dart';
 import 'package:smalltin/core/constants/dialog.dart';
 import 'package:smalltin/core/core.dart';
-import 'package:smalltin/feature/auth/password_screen.dart';
-import 'package:smalltin/feature/auth/sign_in.dart';
-import 'package:smalltin/feature/auth/update_username.dart';
-import 'package:smalltin/feature/auth/verify_email.dart';
-import 'package:smalltin/feature/home/home.dart';
-import '../choose_field/choose_fields.dart';
-import '../choose_field/choose_sub_field.dart';
-import '../update_password.dart';
 
 class AuthController extends GetxController {
   final box = GetStorage();
@@ -54,9 +46,13 @@ class AuthController extends GetxController {
       if (res != null) {
         var data = jsonDecode(res.body);
         if (res.statusCode == 200) {
-          Get.to(() => const PasswordScreen());
+          Get.toNamed(
+            '/auth/login',
+          );
         } else if (res.statusCode == 201) {
-          Get.to(() => const VerifyEmail());
+          Get.toNamed(
+            '/auth/verify-email',
+          );
         } else if (res.statusCode == 202) {
           AppDailog.error(
               context: context,
@@ -75,7 +71,9 @@ class AuthController extends GetxController {
               buttonText: "Let's go",
               message: data["error"] ?? "Your Registration is not Complete",
               onPressed: () {
-                Get.to(() => const PasswordScreen());
+                Get.toNamed(
+                  '/auth/login',
+                );
               });
         } else {
           AppDailog.error(
@@ -107,10 +105,14 @@ class AuthController extends GetxController {
 
         box.write('token', enc);
         if (res.statusCode == 200) {
-          Get.to(() => const HomeScreen());
+          Get.offAllNamed(
+            '/',
+          );
         } else if (res.statusCode == 203 &&
             data["message"] == "Username is not set.") {
-          Get.to(() => const UpdateName());
+          Get.offNamed(
+            '/auth/update-username',
+          );
         } else {
           AppDailog.error(
               context: context,
@@ -133,7 +135,9 @@ class AuthController extends GetxController {
     update();
     if (res != null) {
       if (res.statusCode == 200) {
-        Get.to(() => const VerifyEmail());
+        Get.toNamed(
+          '/auth/verify-email',
+        );
       }
     }
   }
@@ -158,7 +162,9 @@ class AuthController extends GetxController {
         var data = jsonDecode(res.body);
         if (res.statusCode == 200) {
           box.write('token', encryptData(data["token"].toString(), tokenKey));
-          Get.to(() => const CreatePassword());
+          Get.toNamed(
+            '/auth/create-password',
+          );
         } else {
           AppDailog.error(
               onPressed: () {
@@ -182,7 +188,9 @@ class AuthController extends GetxController {
           buttonText: "Back",
           message: "Password Is less Then the required lenght");
     } else if (passwordEditingController.text.length >= 6) {
-      Get.off(() => const ComfirmPassword());
+      Get.offNamed(
+        "/auth/confirm-password",
+      );
     }
   }
 
@@ -192,7 +200,9 @@ class AuthController extends GetxController {
         confrimPasswordEditingController.text) {
       AppDailog.error(
           onPressed: () {
-            Get.to(() => const CreatePassword());
+            Get.toNamed(
+              '/auth/create-password',
+            );
           },
           context: context,
           buttonText: "Back",
@@ -216,7 +226,9 @@ class AuthController extends GetxController {
               AppDailog.error(
                   title: data["message"],
                   onPressed: () {
-                    Get.off(() => const UpdateName());
+                    Get.offNamed(
+                      "auth/update-username",
+                    );
                   },
                   context: context,
                   buttonText: "Let's go",
@@ -225,7 +237,9 @@ class AuthController extends GetxController {
               AppDailog.error(
                   title: data["message"],
                   onPressed: () {
-                    Get.off(() => const ChooseField());
+                    Get.offNamed(
+                      "/choose-fields",
+                    );
                   },
                   context: context,
                   buttonText: "Let's go",
@@ -233,9 +247,9 @@ class AuthController extends GetxController {
             } else if (data["user"]["sub_fields"] == null) {
               AppDailog.error(
                   onPressed: () {
-                    Get.off(() => ChooseSubField(
-                          mainField: data["user"]["fields"],
-                        ));
+                    Get.offNamed('/choose-sub-fields',
+                        arguments: data["user"]
+                            ["fields"]); // Pass the list directly
                   },
                   context: context,
                   buttonText: "Let's go",
@@ -314,9 +328,8 @@ class AuthController extends GetxController {
         AppDailog.error(
             title: data["message"],
             onPressed: () {
-              Get.off(() => ChooseSubField(
-                    mainField: field,
-                  ));
+              Get.offNamed('/choose-sub-fields',
+                  arguments: field); // Pass the list directly
             },
             context: context,
             buttonText: "Let's go",
@@ -339,7 +352,9 @@ class AuthController extends GetxController {
         AppDailog.error(
             title: data["message"],
             onPressed: () {
-              Get.offAll(() => const HomeScreen());
+              Get.offAllNamed(
+                "/",
+              );
             },
             context: context,
             buttonText: "Let's go",
@@ -363,7 +378,9 @@ class AuthController extends GetxController {
           if (res != null && res.statusCode == 200) {
             var data = json.decode(res.body);
             if (data["message"] == "Verification Otp sent Succesfully ") {}
-            Get.to(() => const VerifyEmail());
+            Get.toNamed(
+              '/auth/verify-email',
+            );
           }
         },
         buttonText: "Continue",
@@ -393,7 +410,9 @@ class AuthController extends GetxController {
     isBusy = false;
     update();
 
-    Get.offAll(() => const SignInScreen());
+    Get.offAllNamed(
+      "/auth/sign-in",
+    );
   }
 
   uploadImage(File image) {

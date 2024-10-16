@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smalltin/core/constants/api_string.dart';
+import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/ladder/controller/ladder_controller.dart';
 import 'package:smalltin/feature/ladder/model/lader_user.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -67,15 +68,15 @@ class LadderState extends State<Ladder> {
       }
     });
 
-    return AppScaffold(
-      child: Column(
-        children: [
-          // Row for the search bar and button
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
+    return LayoutBuilder(builder: (context, snapshot) {
+      return AppScaffold(
+        centerTitle: false,
+        appbarTitle: snapshot.isLargeScreen
+            ? Center(
+                child: Container(
+                  alignment: Alignment.bottomLeft,
+                  height: 55,
+                  width: 600,
                   child: TextField(
                     controller: _searchController,
                     onChanged: (query) {
@@ -91,110 +92,289 @@ class LadderState extends State<Ladder> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                ElevatedButton(
+              )
+            : Container(),
+        appbarActions: [
+          snapshot.isLargeScreen
+              ? ElevatedButton(
                   onPressed: scrollToCurrentUser,
                   child: const Text('Go to My Position'),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Obx(() => RefreshIndicator(
-                  onRefresh: () async {
-                    await ladderController.realtimeUpdate();
-                  },
-                  child: ListView(
-                    controller: scrollController,
-                    children: [
-                      if (ladderController.users.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Column(
-                            children: [
-                              // Display Top Three Users
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (ladderController.users.length > 1)
-                                    _buildUserAvatar(
-                                        ladderController
-                                            .users[1].userDetails.profile,
-                                        '2nd',
-                                        ladderController
-                                            .users[1].userDetails.username,
-                                        ladderController
-                                            .users[1].correctAnswers,
-                                        40,
-                                        context,
-                                        ladderController
-                                                .users[1].userDetails.email ==
-                                            userController.userModel!.email,
-                                        ladderController.users[1]),
-                                  if (ladderController.users.isNotEmpty)
-                                    _buildUserAvatar(
-                                        ladderController
-                                            .users[0].userDetails.profile,
-                                        '1st',
-                                        ladderController
-                                            .users[0].userDetails.username,
-                                        ladderController
-                                            .users[0].correctAnswers,
-                                        60,
-                                        context,
-                                        ladderController
-                                                .users[0].userDetails.email ==
-                                            userController.userModel!.email,
-                                        ladderController.users[0]),
-                                  if (ladderController.users.length > 2)
-                                    _buildUserAvatar(
-                                        ladderController
-                                            .users[2].userDetails.profile,
-                                        '3rd',
-                                        ladderController
-                                            .users[2].userDetails.username,
-                                        ladderController
-                                            .users[2].correctAnswers,
-                                        40,
-                                        context,
-                                        ladderController
-                                                .users[2].userDetails.email ==
-                                            userController.userModel!.email,
-                                        ladderController.users[2]),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                          ),
-                        ),
-                      // Remaining Users (Filtered)
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: filteredUsers.length,
-                        itemBuilder: (context, index) {
-                          final user = filteredUsers[index];
-                          final isCurrentUser = user.userDetails.email ==
-                              userController.userModel!.email;
-                          return UserCard(
-                            user: user,
-                            isCurrentUser: isCurrentUser,
-                          );
-                        },
-                      ),
-                      // Loading Indicator
-                      if (ladderController.hasMore.value &&
-                          ladderController.isLoading.value)
-                        const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                    ],
-                  ),
-                )),
-          ),
+                )
+              : Container(),
         ],
+        child: LayoutBuilder(builder: (context, snapshot) {
+          return snapshot.isLargeScreen
+              ? Row(
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.4,
+                        child: _buildTopUsers(snapshot, ladderController,
+                            userController, context)),
+                    // Remaining Users
+                    _buildUserListView(userController, filteredUsers,
+                        scrollController, ladderController),
+                  ],
+                )
+              : Column(
+                  children: [
+                    // Row for the search bar and button
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: (query) {
+                                setState(() {
+                                  _searchQuery = query;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Search by name',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          ElevatedButton(
+                            onPressed: scrollToCurrentUser,
+                            child: const Text('Go to My Position'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Obx(() => RefreshIndicator(
+                            onRefresh: () async {
+                              await ladderController.realtimeUpdate();
+                            },
+                            child: ListView(
+                              controller: scrollController,
+                              children: [
+                                if (ladderController.users.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Column(
+                                      children: [
+                                        // Display Top Three Users
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            if (ladderController.users.length >
+                                                1)
+                                              _buildUserAvatar(
+                                                  ladderController.users[1]
+                                                      .userDetails.profile,
+                                                  '2nd',
+                                                  ladderController.users[1]
+                                                      .userDetails.username,
+                                                  ladderController
+                                                      .users[1].correctAnswers,
+                                                  40,
+                                                  context,
+                                                  ladderController.users[1]
+                                                          .userDetails.email ==
+                                                      userController
+                                                          .userModel!.email,
+                                                  ladderController.users[1]),
+                                            if (ladderController
+                                                .users.isNotEmpty)
+                                              _buildUserAvatar(
+                                                  ladderController.users[0]
+                                                      .userDetails.profile,
+                                                  '1st',
+                                                  ladderController.users[0]
+                                                      .userDetails.username,
+                                                  ladderController
+                                                      .users[0].correctAnswers,
+                                                  60,
+                                                  context,
+                                                  ladderController.users[0]
+                                                          .userDetails.email ==
+                                                      userController
+                                                          .userModel!.email,
+                                                  ladderController.users[0]),
+                                            if (ladderController.users.length >
+                                                2)
+                                              _buildUserAvatar(
+                                                  ladderController.users[2]
+                                                      .userDetails.profile,
+                                                  '3rd',
+                                                  ladderController.users[2]
+                                                      .userDetails.username,
+                                                  ladderController
+                                                      .users[2].correctAnswers,
+                                                  40,
+                                                  context,
+                                                  ladderController.users[2]
+                                                          .userDetails.email ==
+                                                      userController
+                                                          .userModel!.email,
+                                                  ladderController.users[2]),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    ),
+                                  ),
+                                // Remaining Users (Filtered)
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: filteredUsers.length,
+                                  itemBuilder: (context, index) {
+                                    final user = filteredUsers[index];
+                                    final isCurrentUser =
+                                        user.userDetails.email ==
+                                            userController.userModel!.email;
+                                    return UserCard(
+                                      user: user,
+                                      isCurrentUser: isCurrentUser,
+                                    );
+                                  },
+                                ),
+                                // Loading Indicator
+                                if (ladderController.hasMore.value &&
+                                    ladderController.isLoading.value)
+                                  const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
+                );
+        }),
+      );
+    });
+  }
+
+  // Method to build top users
+  Widget _buildTopUsers(
+      BoxConstraints snapshot,
+      LadderController ladderController,
+      UserController userController,
+      BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
+      child: SizedBox(
+        width:
+            snapshot.isLargeScreen ? MediaQuery.sizeOf(context).width * 0.2 : 2,
+        child: Center(
+          child: snapshot.isLargeScreen
+              ? Column(
+                  children: [
+                    if (ladderController.users.isNotEmpty)
+                      _buildUserAvatar(
+                        ladderController.users[0].userDetails.profile,
+                        '1st',
+                        ladderController.users[0].userDetails.username,
+                        ladderController.users[0].correctAnswers,
+                        60,
+                        context,
+                        ladderController.users[0].userDetails.email ==
+                            userController.userModel!.email,
+                        ladderController.users[0],
+                      ),
+                    if (ladderController.users.length > 1)
+                      _buildUserAvatar(
+                        ladderController.users[1].userDetails.profile,
+                        '2nd',
+                        ladderController.users[1].userDetails.username,
+                        ladderController.users[1].correctAnswers,
+                        50,
+                        context,
+                        ladderController.users[1].userDetails.email ==
+                            userController.userModel!.email,
+                        ladderController.users[1],
+                      ),
+                    if (ladderController.users.length > 2)
+                      _buildUserAvatar(
+                        ladderController.users[2].userDetails.profile,
+                        '3rd',
+                        ladderController.users[2].userDetails.username,
+                        ladderController.users[2].correctAnswers,
+                        40,
+                        context,
+                        ladderController.users[2].userDetails.email ==
+                            userController.userModel!.email,
+                        ladderController.users[2],
+                      ),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (ladderController.users.length > 1)
+                      _buildUserAvatar(
+                        ladderController.users[1].userDetails.profile,
+                        '2nd',
+                        ladderController.users[1].userDetails.username,
+                        ladderController.users[1].correctAnswers,
+                        40,
+                        context,
+                        ladderController.users[1].userDetails.email ==
+                            userController.userModel!.email,
+                        ladderController.users[1],
+                      ),
+                    if (ladderController.users.isNotEmpty)
+                      _buildUserAvatar(
+                        ladderController.users[0].userDetails.profile,
+                        '1st',
+                        ladderController.users[0].userDetails.username,
+                        ladderController.users[0].correctAnswers,
+                        60,
+                        context,
+                        ladderController.users[0].userDetails.email ==
+                            userController.userModel!.email,
+                        ladderController.users[0],
+                      ),
+                    if (ladderController.users.length > 2)
+                      _buildUserAvatar(
+                        ladderController.users[2].userDetails.profile,
+                        '3rd',
+                        ladderController.users[2].userDetails.username,
+                        ladderController.users[2].correctAnswers,
+                        40,
+                        context,
+                        ladderController.users[2].userDetails.email ==
+                            userController.userModel!.email,
+                        ladderController.users[2],
+                      ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  // Method to build the user list view
+  Widget _buildUserListView(
+      UserController userController,
+      List<MonthlyStat> filteredUsers,
+      ScrollController scrollController,
+      LadderController ladderController) {
+    return Expanded(
+      child: ListView.builder(
+        controller: scrollController,
+        itemCount: filteredUsers.length,
+        itemBuilder: (context, index) {
+          final user = filteredUsers[index];
+          final isCurrentUser =
+              user.userDetails.email == userController.userModel!.email;
+          return UserCard(
+            user: user,
+            isCurrentUser: isCurrentUser,
+          );
+        },
       ),
     );
   }
@@ -243,7 +423,7 @@ class LadderState extends State<Ladder> {
           const SizedBox(height: 5),
           // User's name and correct attempts section with responsive width
           SizedBox(
-            width: MediaQuery.of(context).size.width / 3 - 20,
+            width: MediaQuery.of(context).size.width / 3 - 40,
             child: Column(
               children: [
                 Text(

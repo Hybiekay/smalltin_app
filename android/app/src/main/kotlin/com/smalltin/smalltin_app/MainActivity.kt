@@ -1,0 +1,5 @@
+package com.smalltin.smalltin_app
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()

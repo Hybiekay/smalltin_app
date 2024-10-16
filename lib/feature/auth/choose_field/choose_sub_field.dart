@@ -10,14 +10,20 @@ import 'package:smalltin/widget/bubble.dart';
 import 'package:smalltin/widget/next_button.dart';
 
 class ChooseSubField extends StatefulWidget {
-  final List<int> mainField;
-  const ChooseSubField({super.key, required this.mainField});
+  const ChooseSubField({
+    super.key,
+  });
 
   @override
   State<ChooseSubField> createState() => _ChooseSubFieldState();
 }
 
 class _ChooseSubFieldState extends State<ChooseSubField> {
+  final List<int> mainFields =
+      List<int>.from(Get.arguments); // Convert arguments back to List<int>
+
+  // Convert the comma-separated string to a list of integers
+
   List<int> selectedSubfields = [];
 
   @override
@@ -26,7 +32,7 @@ class _ChooseSubFieldState extends State<ChooseSubField> {
       return GetBuilder<FieldsController>(builder: (fieldsController) {
         // Find all fields that match any of the IDs in mainField
         var fields = fieldsController.fields
-            .where((element) => widget.mainField.contains(element.id))
+            .where((element) => mainFields.contains(element.id))
             .toList();
 
         // Aggregate all subfields from the matching fields

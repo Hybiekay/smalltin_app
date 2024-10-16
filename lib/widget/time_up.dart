@@ -41,7 +41,7 @@ class _TimeUPState extends State<TimeUP> {
               Text(
                 widget.data["message"] == "Token expired."
                     ? 'Time Up'
-                    : "Invalid ", // "Time Up",
+                    : "Invalid", // "Time Up",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: AppColor.white,
                       fontSize: 24,
