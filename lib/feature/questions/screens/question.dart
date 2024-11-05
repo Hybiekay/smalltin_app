@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:smalltin/ads/reward_ads_manager.dart';
 import 'package:smalltin/core/core.dart';
 import 'package:smalltin/feature/questions/controllers/quiz_controller.dart';
 import 'package:smalltin/feature/widget/app_scaffold.dart';
@@ -66,13 +65,17 @@ class _QuestionState extends State<Question> {
             ],
           ),
           appbarActions: const [],
-          child: !_isAdWatched
-              ? Container(
-                  child: Center(
-                    child: Text("Check Your Internet"),
-                  ),
-                )
-              : quizController.isBusy
+          child:
+
+              // !_isAdWatched
+              //     ? Container(
+              //         child: Center(
+              //           child: Text("Check Your Internet"),
+              //         ),
+              //       )
+              //     :
+
+              quizController.isBusy
                   ? const Loading()
                   : snapshot.isLargeScreen
                       ? Row(

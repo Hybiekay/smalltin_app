@@ -1,7 +1,4 @@
-
 import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:smalltin/core/constants/api_string.dart';
@@ -14,7 +11,6 @@ class QuizApi {
   Future startQuiz() async {
     var token = decryptData(box.read("token"), tokenKey);
 
-   
     try {
       var res = await http.get(
         ApiString.endPoint("start-quiz"),
@@ -24,8 +20,8 @@ class QuizApi {
           'X-API-KEY': ApiString.apiquiss,
         },
       );
-      // debugPrint(res.statusCode.toString());
-      //  log(res.body.toString());
+      // log(res.statusCode.toString());
+      // log(res.body.toString());
       return res;
     } catch (e) {
       log(e.toString());
@@ -48,8 +44,8 @@ class QuizApi {
         },
         body: {"token": gameToken, "answer": answer},
       );
-      debugPrint(res.statusCode.toString());
-     
+      // debugPrint(res.statusCode.toString());
+
       return res;
     } catch (e) {
       log(e.toString());

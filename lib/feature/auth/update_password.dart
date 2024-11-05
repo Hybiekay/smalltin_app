@@ -52,6 +52,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                       },
                       hint: "Enter Your Password here",
                       controller: authController.passwordEditingController,
+                      isPassword: true,
                     ),
                     const SizedBox(
                       height: 15,
@@ -112,6 +113,7 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
                             hint: "Enter Your Password here",
                             controller:
                                 authController.confrimPasswordEditingController,
+                            isPassword: true,
                           ),
                         ],
                       );

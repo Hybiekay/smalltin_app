@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:smalltin/core/core.dart';
+import 'package:smalltin/themes/color.dart';
 import 'package:smalltin/widget/auth_button.dart';
 
 class AppTextField extends StatefulWidget {
@@ -82,6 +84,7 @@ class _AppTextFieldState extends State<AppTextField> {
                     },
                     child: Icon(
                       isObucure ? Icons.visibility : Icons.visibility_off,
+                      color: context.isDarkMode ? AppColor.gray : Colors.black,
                     ))
                 : Container(),
             const SizedBox(

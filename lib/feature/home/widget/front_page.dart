@@ -323,11 +323,11 @@ class FontCard extends StatelessWidget {
                 isButton: true,
               ),
               BoxCard(
-                text: "Total  Q Attempt",
+                text: "Monthly Q Attempt",
                 subText: "${conrrentMonthlyStat?.totalAttempts ?? 0}",
               ),
               BoxCard(
-                text: "Total  Correct",
+                text: "Monthly Q Correct",
                 subText: "${conrrentMonthlyStat?.correctAnswers ?? 0}",
               ),
             ],
@@ -446,10 +446,7 @@ class FontCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 13),
                   ViewButton(
-                    text: "View In Position",
-                    onTap: () {
-                      Get.toNamed('/ladder-board');
-                    },
+                    text: "JOB\$NGN 1.00",
                   ),
                 ],
               )
@@ -470,7 +467,7 @@ class FontCard extends StatelessWidget {
                   children: [
                     SideButton(
                       icon: AppImages.dashboard,
-                      title: "/Edit Profile",
+                      title: "Edit Profile",
                       onPressed: () {
                         Get.toNamed(
                           '/edit-profile',
