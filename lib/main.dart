@@ -13,10 +13,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   Get.put(ThemesController());
-  // Initialize only if not on the web
-  // if (!kIsWeb) {
-  //   MobileAds.instance.initialize();
-  // }
   runApp(const MyApp());
 }
 

@@ -51,6 +51,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               title: "Verify Your Email",
                               subTitle:
                                   "To ensure the security of your account, we've sent a one-time verification code to the Email ${controller.emailEditingController.text} you provided."),
+                          const SizedBox(
+                            height: 15,
+                          ),
                           AppTextField(
                             onTap: () {
                               controller.verifyEmail(context);
