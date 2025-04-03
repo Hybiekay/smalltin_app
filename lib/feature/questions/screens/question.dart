@@ -56,7 +56,7 @@ class _QuestionState extends State<Question> {
                 subTitle: formatTime(quizController.time),
               ),
               Text(
-                "Question ${quizController.questionCount} of 10",
+                "Question ${quizController.questionCount} of ${quizController.questionLength}",
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge!

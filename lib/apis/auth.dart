@@ -93,6 +93,10 @@ class AuthService {
     String passwordConfirmation,
     String token,
   ) async {
+    print(token.toString());
+    debugPrint(token.toString());
+    debugPrint(token.toString());
+
     try {
       var res = await http.post(
         ApiString.endPoint("update"),
@@ -105,7 +109,7 @@ class AuthService {
           "password_confirmation": passwordConfirmation
         },
       );
-      debugPrint(res.statusCode.toString());
+      print(res.statusCode.toString());
       debugPrint(res.body.toString());
       return res;
     } catch (e) {

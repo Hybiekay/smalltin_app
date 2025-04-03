@@ -36,6 +36,7 @@ class _CreatePasswordState extends State<CreatePassword> {
                       },
                       hint: "Enter Your Password here",
                       controller: authController.passwordEditingController,
+                      isPassword: true,
                     )
                   ],
                 )
@@ -86,17 +87,19 @@ class _ComfirmPasswordState extends State<ComfirmPassword> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const ContentWidget(
-                            title: "Comfirm Your New Password To Continue !",
+                            title: "Confirm Your New Password To Continue !",
                             subTitle:
-                                "Are you sure you input correct password?, please confirm your password by entering it again below. By adding Your Confriming your new password you will be log in automaticaly",
+                                "Are you sure you input correct password?, please confirm your password by entering it again below. By adding Your Confirming your new password you will be log in automaticaly",
                           ),
                           AppTextField(
-                              onTap: () {
-                                authController.updatePassword(context);
-                              },
-                              hint: "Enter Your Password here",
-                              controller: authController
-                                  .confrimPasswordEditingController)
+                            onTap: () {
+                              authController.updateMainPassword(context);
+                            },
+                            hint: "Enter Your Password here",
+                            controller:
+                                authController.confrimPasswordEditingController,
+                            isPassword: true,
+                          )
                         ],
                       )
                     : Column(

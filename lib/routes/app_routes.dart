@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:smalltin/feature/auth/choose_field/choose_fields.dart';
-import 'package:smalltin/feature/auth/choose_field/choose_sub_field.dart';
 import 'package:smalltin/feature/auth/password_screen.dart';
 import 'package:smalltin/feature/auth/sign_in.dart';
 import 'package:smalltin/feature/auth/update_password.dart';
@@ -29,10 +28,8 @@ class AppRoutes {
         name: '/auth/confirm-password', page: () => const ComfirmPassword()),
     GetPage(name: '/auth/update-username', page: () => const UpdateName()),
     GetPage(name: '/choose-fields', page: () => const ChooseField()),
-    GetPage(name: '/choose-sub-fields', page: () => const ChooseSubField()),
     GetPage(name: '/loading', page: () => const LoadingScreen()),
     GetPage(name: '/splash', page: () => const SplashScreen()),
-    GetPage(name: '/choose-sub-fields', page: () => const ChooseSubField()),
     GetPage(name: '/onboarding', page: () => const OnboardingScreen()),
     GetPage(name: '/attempt-question', page: () => const Question()),
     GetPage(name: '/history', page: () => const HistoryStat()),

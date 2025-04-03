@@ -20,8 +20,8 @@ class QuizApi {
           'X-API-KEY': ApiString.apiquiss,
         },
       );
-      // log(res.statusCode.toString());
-      // log(res.body.toString());
+      log(res.statusCode.toString());
+      log("THIS IS ${res.body.toString()}");
       return res;
     } catch (e) {
       log(e.toString());
@@ -45,7 +45,7 @@ class QuizApi {
         body: {"token": gameToken, "answer": answer},
       );
       // debugPrint(res.statusCode.toString());
-
+      log(res.body.toString());
       return res;
     } catch (e) {
       log(e.toString());

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,6 +45,7 @@ class AuthController extends GetxController {
       var res = await _authService.login(emailEditingController.text);
       isBusy = false;
       update();
+      log("${res?.body}");
       if (res != null) {
         var data = jsonDecode(res.body);
         if (res.statusCode == 200) {
@@ -54,6 +56,9 @@ class AuthController extends GetxController {
           Get.toNamed(
             '/auth/verify-email',
           );
+        } else if (res.statusCode == 203 &&
+            data["message"] == "Password is not set.") {
+          resendOtp();
         } else if (res.statusCode == 202) {
           AppDailog.error(
               context: context,
@@ -221,6 +226,8 @@ class AuthController extends GetxController {
           passwordEditingController.text,
           confrimPasswordEditingController.text,
           token);
+      print(res);
+
       isBusy = false;
       update();
       if (res != null) {
@@ -326,30 +333,6 @@ class AuthController extends GetxController {
     isBusy = true;
     update();
     var res = await _authService.updateFields(field, token);
-    isBusy = false;
-    update();
-    if (res != null) {
-      var data = jsonDecode(res.body);
-      if (res.statusCode == 200) {
-        AppDailog.error(
-            title: data["message"],
-            onPressed: () {
-              Get.offNamed('/choose-sub-fields',
-                  arguments: field); // Pass the list directly
-            },
-            context: context,
-            buttonText: "Let's go",
-            message: "Your account is all Set.");
-      }
-    }
-  }
-
-  updateSubFields(
-      {required BuildContext context, required List<int> subFields}) async {
-    var token = decryptData(box.read("token"), tokenKey);
-    isBusy = true;
-    update();
-    var res = await _authService.updateSubFields(subFields, token);
     isBusy = false;
     update();
     if (res != null) {
